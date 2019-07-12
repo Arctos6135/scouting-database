@@ -8,6 +8,7 @@ const endpoint = "https://www.thebluealliance.com/api/v3";
 const district_key = "2019ont";
 
 // This is my API key.
+// Maybe should read from process.env to see if user has a different key?
 const api_key = "sX6YAEFTW4k2ovNN9IQKRhwFe5XArlokFHUU899aK6Vr4ZlbiA4tq36R4gKEmh6h";
 
 function api_options() {
@@ -15,7 +16,7 @@ function api_options() {
 			{"X-TBA-Auth-Key": api_key}};
 }
 
-// get the teams.  Call a handler function for each team.
+// Get the teams.  Call a handler function for each team.
 // team_handler is a function that is called once for each team that the API returns
 // no_more_teams is a function (of no args) called after all teams have been read
 // page is an optional input used to get the next set of teams.
@@ -79,27 +80,19 @@ function all_events(event_handler, no_more_events) {
 }
 
 // Get all the matches for the specified event_code
-// For each one, call handler
-// event_handler is a function that is called once for each event that the API returns
-function matches_at_event(event_code, match_handler, no_more_matches) {
+// call the match_handler with the list of all matches at that event.
+function matches_at_event(event_code, match_handler) {
     var url =  endpoint + "/event/" + event_code + "/matches/simple";
     https.get(url,
-			  api_options(),   // TBA needs your account key
+			  api_options(),
 			  (resp) => {
-				  // collect all the response data until there is no more
 				  let reply = "";
+
 				  resp.on('data', (chunk) => {
-					  // got more data from TBA, add it to the string
 					  reply += chunk;
 				  });
 		  
-				  resp.on('end', () => {
-					  // the reply is a JSON object we need to parse it
-					  //the result is an array of match objects, call team_handler for each one
-					  JSON.parse(reply)
-						  .forEach(match => match_handler(match));
-					  no_more_matches();
-				  });
+				  resp.on('end', () => match_handler(JSON.parse(reply)));
 		  
 	      }).on('error', (e) => {
 			  console.error(e);
@@ -110,9 +103,9 @@ module.exports.all_teams = all_teams;
 module.exports.all_events = all_events;
 module.exports.matches_at_event = matches_at_event;
 
-//If run at top level, just show the teams.  This is for testing/demo purposes
+// If run at top level, just show the teams.  This is for testing/demo purposes.
 if (require.main === module) {
-	all_teams(team => console.log(team.nickname),
-			  () => console.log("done")
+	all_teams(team => console.log(`${team.team_number} ${team.nickname}`),
+			  () => {}
 			 );
 }

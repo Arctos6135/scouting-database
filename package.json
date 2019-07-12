@@ -1,10 +1,9 @@
 {
-  "name": "scouting-database",
+  "name": "scouting-experiment",
   "version": "1.0.0",
-  "description": "The scouting database system of FRC team Arctos 6135. Still in prototype",
-  "main": "load_events.js",
+  "description": "Prototype strategy database for FRC",
+  "main": "echo \"see readme\" && exit 1",
   "dependencies": {
-    "async": "^3.1.0",
     "mysql": "^2.17.1"
   },
   "devDependencies": {},
@@ -13,18 +12,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Arctos6135/scouting-database.git"
+    "url": "git+https://github.com/michal-davis/scouting-experiment.git"
   },
   "keywords": [
-    "\"FRC\"",
-    "\"Arctos",
-    "6135\"",
-    "\"strategy\""
+    "FRC",
+    "Arctos",
+    "TheBlueAlliance"
   ],
-  "author": "\"Arctos 6135\"",
+  "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Arctos6135/scouting-database/issues"
+    "url": "https://github.com/michal-davis/scouting-experiment/issues"
   },
-  "homepage": "https://github.com/Arctos6135/scouting-database#readme"
+  "homepage": "https://github.com/michal-davis/scouting-experiment#readme"
 }
