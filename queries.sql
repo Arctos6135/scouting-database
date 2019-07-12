@@ -1,6 +1,6 @@
 USE strategy;
 
-SELECT * FROM team;
+SELECT * FROM team ORDER BY team_number;
 SELECT * from frc_event;
 SELECT * FROM frc_match order by match_number ASC;
 SELECT * from alliance;
