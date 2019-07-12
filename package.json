@@ -1,0 +1,30 @@
+{
+  "name": "scouting-database",
+  "version": "1.0.0",
+  "description": "The scouting database system of FRC team Arctos 6135. Still in prototype",
+  "main": "load_events.js",
+  "dependencies": {
+    "async": "^3.1.0",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arctos6135/scouting-database.git"
+  },
+  "keywords": [
+    "\"FRC\"",
+    "\"Arctos",
+    "6135\"",
+    "\"strategy\""
+  ],
+  "author": "\"Arctos 6135\"",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Arctos6135/scouting-database/issues"
+  },
+  "homepage": "https://github.com/Arctos6135/scouting-database#readme"
+}
