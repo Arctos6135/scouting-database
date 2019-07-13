@@ -23,30 +23,8 @@ The output.json is hard to read. Here's what it means:
 |matchNumber       |MATCH #              |N/A *^2*            |
 |teamNumber        |TEAM                 |team_number         |
 
-*Notes*
-When two things are slashed, as in rock1c/h, it refers to two separated things, each with one of the items one the side of the slash.
-(rock1c/h means rock1c and rock1h). For the rest of the row, items on the left side of any slash pertain to the first option, and those on the right pertain to the second. (R1 CARGO/HATCH (tele) after rock1c/h means rock1c -> R1 CARGO (tele) and rock1h -> R1 HATCH (tele))
-*^1: In both the excel and sql databases, penalty is filled from a different source (the super scout system)*  
-*^2: The sql database use the alliance_id in lieu of match number. They work similarly
-
-
-        rock2c: 2,
-        rock3c: 2,
-        rock1h: 2,
-        rock2h: 2,
-        rock3h: 2,
-        shipc: 1,
-        shiph: 1,
-        climblvlReached: 2,
-        assist: 0,
-        broken: false,
-        tip: false,
-        depot: false,
-        floor: false,
-        opposide: 0,
-        ppoints: 0,
-        hdropped: 0,
-        matchNumber: 80,
-        teamNumber: 1325
-    },
-    START	CS HATCH	R1 HATCH	R2 HATCH	R3 HATCH	CS CARGO	R1 CARGO	R2 CARGO	R3 CARGO	CS HATCH	R1 HATCH	R2 HATCH	R3 HATCH	CS CARGO	R1 CARGO	R2 CARGO	R3 CARGO	DEFENSE	ASSIST	CLIMB	TIPPED	BROKE	FLOOR H	PENALTY	DROP H
+*Notes*  
+When two things are slashed *(rock1c/h)*, it refers to two separated things, each with one of the items one the side of the slash.
+*(rock1c/h means rock1c and rock1h)*. For the rest of the row, items on the left side of any slash pertain to the first option, and those on the right pertain to the second. *(R1 CARGO/HATCH (tele) after rock1c/h means rock1c -> R1 CARGO (tele) and rock1h -> R1 HATCH (tele))*    
+*^1: In both the excel and sql databases, penalty is filled from a different source (the super scout system)*   
+*^2: The sql database use the alliance_id in lieu of match number. They work similarly* 
