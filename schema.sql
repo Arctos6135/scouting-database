@@ -78,9 +78,9 @@ CREATE TABLE alliance_member_outcome (
 	defense_time	NUMERIC NOT NULL,
 	assist			INT NOT NULL,
 	climb			INT NOT NULL,
-	tipped			INT NOT NULL,
-	broke			INT NOT NULL,
-	floor_h			INT NOT NULL,
+	tipped			BOOLEAN NOT NULL,
+	broke			BOOLEAN NOT NULL,
+	floor_h			BOOLEAN NOT NULL,
 	dropped_h		INT NOT NULL,
 
     CONSTRAINT FOREIGN KEY (alliance_id) REFERENCES alliance (alliance_id) ON DELETE CASCADE,
