@@ -2,12 +2,16 @@ USE strategy;
 
 SELECT * FROM team ORDER BY team_number;
 SELECT * from frc_event;
-SELECT * FROM frc_match order by match_number ASC;
+SELECT * FROM frc_match order by match_id ASC;
 SELECT * from alliance;
 SELECT * from alliance_member;
+SELECT * FROM alliance_member_outcome ORDER BY alliance_id ASC;
+SELECT * FROM denormalized_schedule
+	WHERE event_code = '2019onosh'
+ORDER BY match_number ASC;
 
 SET SQL_SAFE_UPDATES = 0;
-DELETE FROM frc_match;
+DELETE FROM alliance_member_outcome;
 
 -- find alliance sizes for all frc_match
 SELECT

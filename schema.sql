@@ -87,4 +87,49 @@ CREATE TABLE alliance_member_outcome (
     CONSTRAINT FOREIGN KEY (alliance_id) REFERENCES alliance (alliance_id) ON DELETE CASCADE,
     CONSTRAINT FOREIGN KEY (team_number) REFERENCES alliance_member (team_number) ON DELETE CASCADE,
     UNIQUE (alliance_id, team_number)
-)
+);
+
+-- denormalized view of the matches with all teams in all alliances
+CREATE OR REPLACE VIEW denormalized_schedule AS 
+WITH match_team_pos AS (
+SELECT m.match_id
+     , a.alliance_colour
+	 , t.team_number
+     , team.name
+     , ROW_NUMBER() OVER w as r
+FROM frc_match m
+INNER JOIN alliance a
+        ON a.match_id = m.match_id
+INNER JOIN alliance_member t
+        ON t.alliance_id = a.alliance_id
+INNER JOIN team
+        ON team.team_number = t.team_number
+WINDOW w AS (partition by m.match_id, a.alliance_colour ORDER BY t.team_number))
+SELECT m.event_code
+     , m.practice
+     , m.match_number
+     , r1.team_number as red1
+     , r1.name        as red1_name
+     , r2.team_number as red2
+     , r2.name        as red2_name
+     , r3.team_number as red3
+     , r3.name        as red3_name
+     , b1.team_number as blue1
+     , b1.name        as blue1_name
+     , b2.team_number as blue2
+     , b2.name        as blue2_name
+     , b3.team_number as blue3
+     , b3.name        as blue3_name
+FROM frc_match m
+INNER JOIN match_team_pos r1
+ ON r1.match_id = m.match_id AND r1.alliance_colour = 'red' and r1.r = 1
+INNER JOIN match_team_pos r2
+ ON r2.match_id = m.match_id AND r2.alliance_colour = 'red' and r2.r = 2
+INNER JOIN match_team_pos r3
+ ON r3.match_id = m.match_id AND r3.alliance_colour = 'red' and r3.r = 3
+INNER JOIN match_team_pos b1
+ ON b1.match_id = m.match_id AND b1.alliance_colour = 'blue' and b1.r = 1
+INNER JOIN match_team_pos b2
+ ON b2.match_id = m.match_id AND b2.alliance_colour = 'blue' and b2.r = 2
+INNER JOIN match_team_pos b3
+ ON b3.match_id = m.match_id AND b3.alliance_colour = 'blue' and b3.r = 3;
