@@ -60,22 +60,16 @@ function all_events(event_handler, no_more_events) {
     https.get(url,
 			  api_options(),   // TBA needs your account key
 			  (resp) => {
-				  // collect all the response data until there is no more
-				  let reply = "";
-				  resp.on('data', (chunk) => {
-					  // got more data from TBA, add it to the string
-					  reply += chunk;
+			      // collect all the response data until there is no more
+			      let reply = "";
+			      resp.on('data', (chunk) => {
+				      // got more data from TBA, add it to the string
+				      reply += chunk;
 				  });
 		  
-				  resp.on('end', () => {
-					  // the reply is a JSON object we need to parse it
-					  //the result is an array of event objects, call event_handler for each one
-					  JSON.parse(reply)
-						  .forEach(event => event_handler(event));
-					  no_more_events();
-				  });
+			      resp.on('end', () => event_handler(JSON.parse(reply)));
 			  }).on('error', (e) => {
-				  console.error(e);
+			      console.error(e);
 			  });
 }
 
@@ -86,22 +80,42 @@ function matches_at_event(event_code, match_handler) {
     https.get(url,
 			  api_options(),
 			  (resp) => {
-				  let reply = "";
-
-				  resp.on('data', (chunk) => {
-					  reply += chunk;
-				  });
-		  
-				  resp.on('end', () => match_handler(JSON.parse(reply)));
-		  
+			      let reply = "";
+			      
+			      resp.on('data', (chunk) => {
+				  reply += chunk;
+			      });
+			      
+			      resp.on('end', () => match_handler(JSON.parse(reply)));
+			      
 	      }).on('error', (e) => {
-			  console.error(e);
+		  console.error(e);
 	      });
 }
 
+function all_alliance_outcomes(event_key, outcome_handler) {
+    //ex. https://www.thebluealliance.com/api/v3/event/2019onosh/matches
+    var url =  endpoint + "/event/" + event_key + "/matches";
+    console.log(url);
+    https.get(url,
+			  api_options(),   // TBA needs your account key
+			  (resp) => {
+				  // collect all the response data until there is no more
+				  let reply = "";
+				  resp.on('data', (chunk) => {
+					  // got more data from TBA, add it to the string
+					  reply += chunk;
+				  });
+		  
+			      resp.on('end', () => outcome_handler(JSON.parse(reply)));
+			  }).on('error', (e) => {
+				  console.error(e);
+			  });
+}
 module.exports.all_teams = all_teams;
 module.exports.all_events = all_events;
 module.exports.matches_at_event = matches_at_event;
+module.exports.all_alliance_outcomes = all_alliance_outcomes;
 
 // If run at top level, just show the teams.  This is for testing/demo purposes.
 if (require.main === module) {
