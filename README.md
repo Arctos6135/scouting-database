@@ -7,7 +7,7 @@ Install mysql
 
 In MySql workbench, run schema.sql (to create db and tables)
 
-```npm install mysql``` 
+```npm install``` 
 
 You need a The Blue Alliance API Key. If you want to use your own, edit that line in `tba.js`
 
