@@ -55,7 +55,7 @@ function all_teams(team_handler, no_more_teams, page=0) {
 // Get all the events for district 
 // Call event_handler for each one.
 // no_more_events is a function (of no args) called after all events have been read
-function all_events(event_handler, no_more_events) {
+function all_events(event_handler) {
     var url =  endpoint + "/" + "district/" + district_key + "/events/simple";
     https.get(url,
 			  api_options(),   // TBA needs your account key
