@@ -53,10 +53,10 @@ async function load_match(connection, match) {
         return new Promise(
             (resolve, reject) => 
                 connection.query(
-                    "INSERT INTO frc_match (match_number, event_code, practice)" +
+                    "INSERT INTO frc_match (match_number, event_code, match_type)" +
                         " VALUES(?, ?, ?)" +
                         " ON DUPLICATE KEY UPDATE event_code = event_code",
-                    [match.match_number, match.event_key, false],
+                    [match.match_number, match.event_key, match.comp_level],
                     (error) =>  (error) ? reject(error) : resolve(match)
                 )
         );
@@ -70,8 +70,8 @@ async function load_match(connection, match) {
                     "SELECT match_id FROM frc_match" +
                         " WHERE match_number = ?" +
                         "   AND event_code = ?" +
-                        "   AND practice = ?",
-                    [match.match_number, match.event_key, false],
+                        "   AND match_type = ?",
+                    [match.match_number, match.event_key, match.comp_level],
                     (error, results) => 
                         (error)
                         ? reject(error)  // something went wrong
@@ -106,7 +106,7 @@ async function load_match(connection, match) {
                 ));
     }
 
-    // Returns a Promise that resolves to the id of the alliance
+    // Returns a Promise that resolves to the id of the alliance 
     function getAllianceId(match_id, colour) {
         return new Promise(
             (resolve, reject) => 

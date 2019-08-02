@@ -34,8 +34,8 @@ async function load_outcome(connection, outcome) {
 			"   AND a.alliance_colour = ? " +
                         " WHERE m.match_number = ? " +
                         "   AND m.event_code = ? " +
-                        "   AND m.practice = ? ", 
-                    [colour, outcome.match_number, outcome.event_key, false],
+                        "   AND m.match_type = ? ", 
+                    [colour, outcome.match_number, outcome.event_key, outcome.comp_level],
                     (error, results) => 
                         (error)
                         ? reject(error)  // something went wrong

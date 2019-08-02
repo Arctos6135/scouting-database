@@ -9,9 +9,10 @@ SELECT * FROM alliance_member_outcome ORDER BY alliance_id ASC;
 SELECT * FROM denormalized_schedule
 	WHERE event_code = '2019onosh'
 ORDER BY match_number ASC;
+SELECT * FROM scouting_output;
 
 SET SQL_SAFE_UPDATES = 0;
-DELETE FROM alliance_member_outcome;
+DELETE FROM alliance_outcome;
 
 -- find alliance sizes for all frc_match
 SELECT
@@ -47,4 +48,15 @@ INNER JOIN alliance_member team
  ON team.alliance_id = a.alliance_id
 WHERE team.team_number = 6135
 ORDER BY event_code, match_number;
+
+-- find Arctos' next match given match number and event code
+SELECT min(m.match_number)
+FROM frc_match m
+INNER JOIN alliance a
+	ON a.match_id = m.match_id
+INNER JOIN alliance_member team
+	ON team.alliance_id = a.alliance_id
+WHERE team.team_number = 6135 
+  AND m.match_number > 4
+  AND event_code = '2019onosh'
 

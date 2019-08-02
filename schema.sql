@@ -24,9 +24,9 @@ CREATE TABLE frc_match (
 	match_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	match_number NUMERIC, -- assigned by event scheduler (ex. quals 4)
     event_code VARCHAR (32),
-    practice BOOLEAN DEFAULT FALSE,
+    match_type ENUM('p', 'qm', 'qf', 'sf', 'f'),
     CONSTRAINT FOREIGN KEY (event_code) REFERENCES frc_event (event_code) ON DELETE CASCADE,
-    UNIQUE(match_number, event_code, practice)
+    UNIQUE(match_number, event_code, match_type)
 );
 DROP TABLE IF EXISTS alliance;
 CREATE TABLE alliance (
@@ -133,3 +133,47 @@ INNER JOIN match_team_pos b2
  ON b2.match_id = m.match_id AND b2.alliance_colour = 'blue' and b2.r = 2
 INNER JOIN match_team_pos b3
  ON b3.match_id = m.match_id AND b3.alliance_colour = 'blue' and b3.r = 3;
+ 
+CREATE OR REPLACE VIEW all_scouting_output AS 
+SELECT 	am.team_number, 
+		avg(ao.score)/3 AS 'average_per_bot_score', 
+        avg(ao.RP1_rocket)/3 AS 'average_rocket_fraction', 
+        avg(ao.RP2_climbed)/3 AS 'average_climb_RP_fraction', 
+        avg(amo.start_level) AS 'average_start_level',
+        max(amo.climb_level) AS 'max_climb_ability',
+        avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'average_sand_hatch' 
+FROM frc_match m
+	INNER JOIN alliance a
+			ON a.match_id = m.match_id
+	INNER JOIN alliance_member am
+			ON am.alliance_id = a.alliance_id
+	INNER JOIN alliance_outcome ao
+			ON ao.alliance_id = a.alliance_id
+	INNER JOIN alliance_member_outcome amo
+			ON amo.alliance_id = a.alliance_id
+		   AND amo.team_number = am.team_number
+GROUP BY am.team_number;
+
+CREATE OR REPLACE VIEW specific_scouting_output AS 
+SELECT 	m.event_code,
+		am.team_number, 
+		avg(ao.score)/3 AS 'average_per_bot_score', 
+        avg(ao.RP1_rocket)/3 AS 'average_rocket_fraction', 
+        avg(ao.RP2_climbed)/3 AS 'average_climb_RP_fraction', 
+        avg(amo.start_level) AS 'average_start_level',
+        max(amo.climb_level) AS 'max_climb_ability',
+        avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'average_sand_hatch' 
+FROM frc_match m
+	INNER JOIN alliance a
+			ON a.match_id = m.match_id
+	INNER JOIN alliance_member am
+			ON am.alliance_id = a.alliance_id
+	INNER JOIN alliance_outcome ao
+			ON ao.alliance_id = a.alliance_id
+	INNER JOIN alliance_member_outcome amo
+			ON amo.alliance_id = a.alliance_id
+		   AND amo.team_number = am.team_number
+GROUP BY m.event_code, am.team_number;
+
+DROP VIEW scouting_output;
+

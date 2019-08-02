@@ -38,6 +38,9 @@ function add_one_row (connection, row) {
 					 reject("no results when getting alliance id for " + team_number + " in " + match_number);
 					 return;
 				     }
+				     if (results.length > 1) {
+					 console.log("Warning: team " + team_number + " in match " + match_number + " has several matches. Alliance_id may be for wrong event!");
+				     }
 				     console.log("alliance_id for " + team_number+ " match " + match_number + " is " + results[0].alliance_id);
 				     resolve(results[0].alliance_id);
 				 }
