@@ -3,7 +3,8 @@ const db = require ('./scouting.js');
 //displays all of a team's information either for a specific event, if one is given, or across all events
 
 //arguments are team_number event_code(optional) match_types(optional)
-//Note that if you omit event_code and specify match_types, you must write [team_number] all [match_types] for the arguments
+//Note that if you omit event_code and specify match_types, you must write [team_number] "all" [match_types] for the arguments
+//both event_code and match_types must be surrounded by string quotes " " to work, and every entry in match types must be surrounded by single quotes "('qm')"
 
 
 async function handle_data (connection, team_number, event_code, match_types) {
