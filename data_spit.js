@@ -6,6 +6,8 @@ const db = require ('./scouting.js');
 //Note that if you omit event_code and specify match_types, you must write [team_number] "all" [match_types] for the arguments
 //both event_code and match_types must be surrounded by string quotes " " to work, and every entry in match types must be surrounded by single quotes "('qm')"
 
+//this code is not secure against SQL injection attacks! match_types is not escaped, so keep a close eye on teams who "just want to admire our pretty data"
+
 
 async function handle_data (connection, team_number, event_code, match_types) {
     await get_data(connection, team_number, event_code, match_types)
@@ -24,7 +26,8 @@ async function get_data (connection, team_number, event_code, match_types) {
 	"           ON amo.alliance_id = a.alliance_id " +
 	"        WHERE amo.team_number = ? " +
 	(event_code ? " AND m.event_code = " + connection.escape(event_code) : " ") +
-	" AND m.match_type IN " + match_types; 
+	" AND m.match_type IN " + match_types;
+    
 
     console.log(query)
     return new Promise(
