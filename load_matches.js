@@ -164,3 +164,5 @@ if (require.main === module) {
     db.with_connection(connection =>  
                        tba.matches_at_event(event_code, matches => load_matches(connection, matches)));
 }
+
+module.exports.load_matches = load_matches;
