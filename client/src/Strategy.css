@@ -1,0 +1,55 @@
+.Strategy {
+  min-height: 100vh;
+  padding-left: 1em;
+}
+
+h1 {font-size: 18pt}
+
+a {
+}
+
+header {
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+}
+
+header .titleBar {
+	float: right;
+	text-align: center;
+	padding-right: 10em;
+	border-right: 1px solid;
+}
+
+header .eventBar {
+	float: right;
+	padding-right: 2em;
+	padding-left: 2em;
+	min-width: 320px;
+}
+
+div.app {
+	clear: both;
+	border-top: 1px solid;
+	padding-top: 1em;
+}
+
+footer {
+  margin-top: 4em;
+  border-top: 1px solid;
+  padding-top: 1em;
+  font-size: 75%;
+  vertical-align: bottom;
+}
+
+.pick-list table td,th {
+text-align: left;
+padding-right: 1em;
+}
+
+th.matchNumber,td.matchNumber {
+  border-right: 1px solid;
+}
+
+th.lastRedTeam,td.lastRedTeam {
+  border-right: 1px solid;
+}
