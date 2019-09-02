@@ -11,7 +11,7 @@ class Header extends React.Component {
               events={this.props.events}
               onEventChange={this.props.eventSelected}/>
             <div className="titleBar">
-              <img src={arctos_logo}  alt="Artos" height="150" />
+              <img src={arctos_logo}  alt="Arctos" height="150" />
               <h1>Arctos Strategy App Prototype</h1>
             </div>
            </header>

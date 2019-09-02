@@ -53,3 +53,8 @@ th.matchNumber,td.matchNumber {
 th.lastRedTeam,td.lastRedTeam {
   border-right: 1px solid;
 }
+
+.outputFilter {
+    margin-top:1em;
+    margin-bottom:1em;
+}
