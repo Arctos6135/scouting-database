@@ -6,7 +6,7 @@ class Header extends React.Component {
     render() {
         return (
             <header>
-            <EventBar 
+            <Settings 
 		      event_code={this.props.event_code} 
               events={this.props.events}
               onEventChange={this.props.eventSelected}/>
@@ -19,7 +19,7 @@ class Header extends React.Component {
     }
 }
 
-class EventBar extends React.Component {
+class Settings extends React.Component {
 	constructor(props) {
 		super(props);
 		this.onEventSelect = this.onEventSelect.bind(this);
@@ -33,18 +33,22 @@ class EventBar extends React.Component {
 
 	render() {
 		return (
-        <div className='eventBar'>
-            <h3>Event {this.props.event_code}</h3>
+        <div className='settings'>
+            <h5>Event {this.props.event_code}</h5>
             <select onChange={this.onEventSelect}>
-				<option key='none' value=''>what event are you at?</option>
-            {this.props.events.map(evt =>
-			<option 
-               name={evt.event_code} 
-               key={evt.event_code}
-			   >
-              {evt.event_code}
-             </option>)}
+	      <option key='none' value=''>what event are you at?</option>
+			{this.props.events.map(evt =>
+					       <option 
+					       name={evt.event_code} 
+					       key={evt.event_code}
+					       >
+					       {evt.event_code}
+					       </option>)}
+		    
             </select>
+	    <h5> Next Match </h5>
+	    <label for="last_match_number"> Enter last match number </label>
+	    <input type="text" id="last_match_number" name="last_match_number" size="4" required pattern="\d*"/>
         </div>
     );
 	}

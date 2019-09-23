@@ -20,11 +20,20 @@ header .titleBar {
 	border-right: 1px solid;
 }
 
-header .eventBar {
+header .settings {
 	float: right;
 	padding-right: 2em;
 	padding-left: 2em;
+	padding-bottom: 1em;
 	min-width: 320px;
+}
+
+header .settings label {
+    font-size: 11pt;
+}
+
+header .settings h5 {
+    margin-bottom: 0em;
 }
 
 div.app {
