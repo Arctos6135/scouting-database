@@ -6,15 +6,17 @@ class Header extends React.Component {
     render() {
         return (
             <header>
-            <Settings 
-		      event_code={this.props.event_code} 
-              events={this.props.events}
-              onEventChange={this.props.eventSelected}/>
-            <div className="titleBar">
-              <img src={arctos_logo}  alt="Arctos" height="150" />
-              <h1>Arctos Strategy App Prototype</h1>
-            </div>
-           </header>
+              <Settings 
+		 event_code={this.props.event_code} 
+		 events={this.props.events}
+		 next_match={this.props.next_match}
+		 onEventChange={this.props.eventSelected}
+		 onMatchChange={this.props.matchSelected}/>
+              <div className="titleBar">
+		<img src={arctos_logo}  alt="Arctos" height="150" />
+		<h1>Arctos Orion Prototype</h1>
+              </div>
+            </header>
         );
     }
 }
@@ -22,14 +24,19 @@ class Header extends React.Component {
 class Settings extends React.Component {
 	constructor(props) {
 		super(props);
-		this.onEventSelect = this.onEventSelect.bind(this);
+	    this.onEventSelect = this.onEventSelect.bind(this);
+	    this.onMatchEnter = this.onMatchEnter.bind(this);
 	}
 
-	// When user chooses an event from the event dropdown
-	onEventSelect(e) {
-		// tell our parent that something changed.
-		this.props.onEventChange(e.target.value);
-	}
+    // When user chooses an event from the event dropdown
+    onEventSelect(e) {
+	// tell our parent that something changed.
+	this.props.onEventChange(e.target.value);
+    }
+    
+    onMatchEnter(e) {
+	this.props.onMatchChange(e.target.value);
+    }
 
 	render() {
 		return (
@@ -46,9 +53,9 @@ class Settings extends React.Component {
 					       </option>)}
 		    
             </select>
-	    <h5> Next Match </h5>
-	    <label for="last_match_number"> Enter last match number </label>
-	    <input type="text" id="last_match_number" name="last_match_number" size="4" required pattern="\d*"/>
+	    <h5> Next Match {this.props.next_match} </h5>
+	    <label htmlFor="last_match_number"> Enter last match number </label>
+			<input type="text" id="last_match_number" name="last_match_number" size="4" required pattern="\d*" onChange={this.onMatchEnter}/>
         </div>
     );
 	}

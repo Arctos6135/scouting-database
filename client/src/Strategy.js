@@ -7,9 +7,15 @@ import './Strategy.css';
 import Header from './Header.js';
 import Footer from './Footer.js';
 import Matches from './Matches.js';
+import NextMatch from './NextMatch.js';
+import DataSpitter from './DataSpitter.js';
+import ScoutingOutput from './ScoutingOutput.js';
 import Teams from './Teams.js';
 import PickList from './PickList.js';
-import ScoutingOutput from './ScoutingOutput.js';
+import CustomQuery from './CustomQuery.js';
+import MatchAdder from './MatchAdder.js';
+
+
 
 // The base URL for the server.
 const serverURL = "http://localhost:3001";
@@ -19,13 +25,16 @@ class Strategy extends React.Component {
     constructor(props) {
         super(props);
 	this.eventSelected = this.eventSelected.bind(this);
-	this.scoutingOutputFilterChange = this.scoutingOutputFilterChange.bind(this);
+	this.matchSelected = this.matchSelected.bind(this);
+	this.dataFilterChange = this.dataFilterChange.bind(this);
         this.state={events: [],
 		    teams: [],
 		    matches: [],
+		    next_match_info: [],
 		    scouting_output: [],
                     picklist: [],
 		    event_code: null,
+		    next_match: null,
 		    specific_scouting_output: false};
     }
 
@@ -59,7 +68,13 @@ class Strategy extends React.Component {
 	console.log("event_code:" + event_code);
         this.getEventSpecificInfo(event_code);
 	
+    }
+
+    matchSelected(last_match_number) {
+	if (this.state.event_code) {
+	    this.getNextMatchNumber(last_match_number, this.state.event_code);
 	}
+    }
     
     getEventSpecificInfo(event_code) {
         if (event_code) {
@@ -69,8 +84,10 @@ class Strategy extends React.Component {
             this.getScoutingOutput(event_code, this.state.specific_scouting_output);
         }
     }
-    
-    scoutingOutputFilterChange(specific_scouting_output) {
+
+    //this method handles both next match and scouting output's specific/all toggle.
+    //In the future when they have more settings we'll probably want to separate them
+    dataFilterChange(specific_scouting_output) {
 	this.setState({specific_scouting_output: specific_scouting_output});
 	console.log("specific_scouting_output:" + specific_scouting_output);
 	this.getScoutingOutput(this.state.event_code, specific_scouting_output);
@@ -96,6 +113,11 @@ class Strategy extends React.Component {
 	axios.get("http://localhost:3001/api/getMatches?event_code=" + event_code)
 	    .then((response) => this.setState({ matches: response.data.data }));
     }
+
+    getNextMatchInfo(event_code, next_match, specific_scouting_output) {
+	axios.get(serverURL + "/api/getNextMatchInfo?event_code=" + event_code + "&next_match=" + next_match + "&specific_scouting_output=" + specific_scouting_output)
+	    .then((response) => this.setState({next_match_info: response.data.data}));
+    }
     
     //get the scouting output, then update our state
     getScoutingOutput(event_code, specific_scouting_output) {
@@ -109,6 +131,14 @@ class Strategy extends React.Component {
 		axios.get(serverURL + "/api/getPicklist?event_code=" + event_code)
 			.then((response) => this.setState({ picklist: response.data.data }));
     }
+
+    //get the next match number, then update state
+    getNextMatchNumber(last_match_number, event_code) {
+	console.log("getting next match number with last match " + last_match_number);
+	axios.get(serverURL + "/api/getNextMatchNumber?event_code=" + event_code + "&last_match_number=" + last_match_number)
+	    .then((response) => this.setState({next_match: response.data.data.match_number}))
+	    .then(() => console.log(this.state.next_match));
+    }
         
     // draw the entire strategyweb app
     // This method returns the JSX (which looks like fancy HTML) for the component.
@@ -120,35 +150,58 @@ class Strategy extends React.Component {
         return (
         <div className="Strategy">
           <Header event_code={this.state.event_code} 
-                  events={this.state.events} 
-                  eventSelected={this.eventSelected}/>
+            events={this.state.events}
+	    next_match={this.state.next_match}
+            eventSelected={this.eventSelected}
+	    matchSelected={this.matchSelected}
+		/>
           <div className='app'>
             <Tabs>
               <TabList>
                 <Tab>Schedule</Tab>
+		<Tab>Next Match</Tab>
+		<Tab>Data Spitter</Tab>
 		<Tab>Scouting Output</Tab>
+		<Tab>Pick List</Tab>
+		<Tab>Custom Query</Tab>
+		<Tab>Add Matches</Tab>
                 <Tab>Teams</Tab>
-                <Tab>Pick List</Tab>
               </TabList>
               <TabPanel>
                 <Matches event_code={this.state.event_code}
 	                 matches={this.state.matches}/>
-		</TabPanel>
-		<TabPanel>
+	      </TabPanel>
+	      <TabPanel>
+		<NextMatch event_code={this.state.event_code}
+	    next_match={this.state.next_match}
+	    next_match_info={this.state.next_match_info}
+			   specific_scouting_output={this.state.specific_scouting_output}
+			   filterChange={this.dataFilterChange} 
+		/>
+	      </TabPanel>
+	      <TabPanel>
+		<DataSpitter/>
+	      </TabPanel>
+	      <TabPanel>
 		<ScoutingOutput event_code={this.state.event_code}
 				scouting_output={this.state.scouting_output}
-				filterChange={this.scoutingOutputFilterChange}
-	    
+				filterChange={this.dataFilterChange}
 				/>
-		</TabPanel>
-              <TabPanel>
-                <Teams event_code={this.state.event_code}
-		       teams={this.state.teams}/>
-		</TabPanel>
-		<TabPanel>
+	      </TabPanel>
+	      <TabPanel>
                 <PickList event_code={this.state.event_code}
 			  picks={this.state.picklist}/>
-              </TabPanel>
+	      </TabPanel>
+	      <TabPanel>
+		<CustomQuery/>
+	      </TabPanel>
+	      <TabPanel>
+		<MatchAdder/>
+	      </TabPanel>
+	      <TabPanel>
+                <Teams event_code={this.state.event_code}
+		       teams={this.state.teams}/>
+	      </TabPanel>
             </Tabs>
           </div>
           <Footer/>
