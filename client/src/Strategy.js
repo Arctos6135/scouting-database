@@ -59,6 +59,10 @@ class Strategy extends React.Component {
         // add calls here to refresh any other dynamic component, or a clock, or whatever
         this.getPicklist(this.state.event_code);
 	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
+	this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
+	console.log(this.state.next_match_info);
+	console.log("output:");
+	console.log(this.state.scouting_output);
     }
 
     // a new Event has been selected (in the event bar)
@@ -73,6 +77,7 @@ class Strategy extends React.Component {
     matchSelected(last_match_number) {
 	if (this.state.event_code) {
 	    this.getNextMatchNumber(last_match_number, this.state.event_code);
+	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
 	}
     }
     
@@ -90,7 +95,10 @@ class Strategy extends React.Component {
     dataFilterChange(specific_scouting_output) {
 	this.setState({specific_scouting_output: specific_scouting_output});
 	console.log("specific_scouting_output:" + specific_scouting_output);
-	this.getScoutingOutput(this.state.event_code, specific_scouting_output);
+	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
+	if (this.state.next_match && this.state.event_code) {
+	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
+	}
     }
 
 	
@@ -116,12 +124,12 @@ class Strategy extends React.Component {
 
     getNextMatchInfo(event_code, next_match, specific_scouting_output) {
 	axios.get(serverURL + "/api/getNextMatchInfo?event_code=" + event_code + "&next_match=" + next_match + "&specific_scouting_output=" + specific_scouting_output)
-	    .then((response) => this.setState({next_match_info: response.data.data}));
+	    .then((response) => this.setState({next_match_info: response.data.data }));
     }
     
     //get the scouting output, then update our state
     getScoutingOutput(event_code, specific_scouting_output) {
-	console.log(specific_scouting_output);
+	//console.log(specific_scouting_output);
 	axios.get(serverURL + "/api/getScoutingOutput?event_code=" + event_code + "&specific_scouting_output=" + specific_scouting_output)
 	    .then((response) => this.setState({ scouting_output: response.data.data }));
     }

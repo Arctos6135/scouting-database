@@ -89,14 +89,22 @@ router.get('/getMatches', (req, res) => {
 router. get('/getNextMatchInfo', (req, res) => {
     try {
 	const event_code = req.query.event_code;
-	const match_number = req.query.match_number;
+	const match_number = parseInt(req.query.next_match, 10);
+	console.log(match_number);
 	const specific_scouting_output = req.query.specific_scouting_output == "true";
 
 	if (specific_scouting_output) {
+	    console.log("specific next match");
 	    connection.query(`SELECT m.match_number,
 			     a.alliance_colour,
 			     am.team_number,
-			     sso.* FROM frc_match m
+			     sso.average_per_bot_score,
+                 sso.average_rocket_fraction,
+                 sso.average_climb_RP_fraction,
+                 sso.average_start_level,
+                 sso.max_climb_ability,
+                 sso.average_sand_hatch
+                 FROM frc_match m
 			         INNER JOIN alliance a
 			                 ON a.match_id = m.match_id
 			         INNER JOIN alliance_member am
@@ -111,8 +119,7 @@ router. get('/getNextMatchInfo', (req, res) => {
 			     (error, results) =>
 			     (error)
 			     ? res.json({success: false, error: error})
-			     : res.json({success: true, data: results})
-			    );
+			     : res.json({success: true, data: results}));
 	}
 
 	else {
@@ -120,7 +127,13 @@ router. get('/getNextMatchInfo', (req, res) => {
 	    connection.query(`SELECT m.match_number,
 			     a.alliance_colour,
 			     am.team_number,
-			     aso.* FROM frc_match m
+			     aso.average_per_bot_score,
+                 aso.average_rocket_fraction,
+                 aso.average_climb_RP_fraction,
+                 aso.average_start_level,
+                 aso.max_climb_ability,
+			     aso.average_sand_hatch
+			     FROM frc_match m
 			         INNER JOIN alliance a
 			                 ON a.match_id = m.match_id
 			         INNER JOIN alliance_member am
@@ -134,14 +147,13 @@ router. get('/getNextMatchInfo', (req, res) => {
 			     (error, results) =>
 			     (error)
 			     ? res.json({success: false, error: error})
-			     : res.json({success: true, data: results})
-			    );
+			     : res.json({success: true, data: results}));
 	}
     }
     catch (err) {
 	res.json({success: false, error: err});
     }
-}
+});
 	    
 router.get('/getScoutingOutput', (req, res) => {
     try {
@@ -156,13 +168,13 @@ router.get('/getScoutingOutput', (req, res) => {
 			     [event_code],
 			     (error, results) =>
 			     (error)
-			     ? res.json({success: false, error: error})
+			     ? res.json({success: false, error: error}) 
 			     : res.json({success: true, data: results})
 			    );
 	}
 
 	else {
-	    console.log("all");
+	    
 	    connection.query(`SELECT * FROM all_scouting_output aso 
 			     WHERE aso.team_number IN (SELECT t.team_number
 						       FROM frc_match m 
@@ -172,7 +184,8 @@ router.get('/getScoutingOutput', (req, res) => {
 						       ON t.alliance_id = a.alliance_id
 							   INNER JOIN team
 						       ON team.team_number = t.team_number
-						       WHERE m.event_code = ?) `,
+						       WHERE m.event_code = ?)
+			     ORDER BY aso.team_number ASC`,
 				 [event_code],
 			     (error, results) =>
 			     (error)
