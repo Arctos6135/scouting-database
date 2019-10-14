@@ -24,7 +24,18 @@ class DataSpitter extends React.Component {
 		    <tr>
 		      <th>Match Type</th>
 		      <th>Match Number</th>
-		      <th>Alliance ID</th>
+		    <th>Alliance ID</th>
+		    
+		    <th>Red 1</th>
+		      <th>Red 2</th>
+		      <th>Red 3</th>
+		      <th>Blue 1</th>
+		      <th>Blue 2</th>
+		    <th>Blue 3</th>
+		      <th>Score</th>
+		      <th>Complete Rocket RP</th>
+		    <th>HAB Climb RP</th>
+		    
 		      <th>Team Number</th>
 		      <th>Start Level</th>
 		      <th>Sand CS Hatch</th>
@@ -51,17 +62,7 @@ class DataSpitter extends React.Component {
 		      <th>Floor Hatch Ability</th>
 		      <th>Dropped Hatches</th>
 		      <th>Penalties</th>
-		      <th>Score</th>
-		      <th>Complete Rocket RP</th>
-		      <th>HAB Climb RP</th>
-		      <th>Red 1</th>
-		      <th>Red 2</th>
-		      <th>Red 3</th>
-		      <th>Blue 1</th>
-		      <th>Blue 2</th>
-		      <th>Blue 3</th>
-		      
-		      
+		        
 		    </tr>
 		  </thead>
 		    <tbody>
@@ -70,6 +71,17 @@ class DataSpitter extends React.Component {
 			<td>{match_info.match_type}</td>
 			<td>{match_info.match_number}</td>
 			<td>{match_info.alliance_id}</td>
+			
+			<td>{match_info.red1}</td>
+			<td>{match_info.red2}</td>
+			<td>{match_info.red3}</td>
+			<td>{match_info.blue1}</td>
+			<td>{match_info.blue2}</td>
+			<td>{match_info.blue3}</td>
+			<td>{match_info.score}</td>
+			<td>{match_info.RP1_rocket}</td>
+			<td>{match_info.RP2_climbed}</td>
+
 			<td>{match_info.team_number}</td>
 			<td>{match_info.start_level}</td>
 			<td>{match_info.sand_cs_hatch}</td>
@@ -96,15 +108,8 @@ class DataSpitter extends React.Component {
 			<td>{match_info.floor_hatch}</td>
 			<td>{match_info.dropped_hatch}</td>
 			<td>{match_info.penalties}</td>
-			<td>{match_info.score}</td>
-			<td>{match_info.RP1_rocket}</td>
-			<td>{match_info.RP2_climbed}</td>
-			<td>{match_info.red1}</td>
-			<td>{match_info.red2}</td>
-			<td>{match_info.red3}</td>
-			<td>{match_info.blue1}</td>
-			<td>{match_info.blue2}</td>
-			<td>{match_info.blue3}</td>
+		
+		
 		      </tr>)}
 		  </tbody>
 		    </table> )
