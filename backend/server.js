@@ -95,6 +95,7 @@ router. get('/getNextMatchInfo', (req, res) => {
 
 	if (specific_scouting_output) {
 	    console.log("specific next match");
+	    //this query fails to return teams not in scouting output. There is a problem with those views, not this program
 	    connection.query(`SELECT m.match_number,
 			     a.alliance_colour,
 			     am.team_number,
@@ -196,6 +197,44 @@ router.get('/getScoutingOutput', (req, res) => {
     } catch (err) {
         res.json({success: false, error: err});
     } 
+});
+
+router.get('/getSpecificTeamsInfo', (req, res) => {
+    try {
+	const team_to_search = parseInt(req.query.team_to_search);
+	const event_code = req.query.event_code
+	connection.query(`SELECT m.match_type,
+			 m.match_number,
+			 amo.*,
+			 ao.score,
+			 ao.RP1_rocket,
+			 ao.RP2_climbed,
+				 dn.red1, dn.red2, dn.red3,
+				 dn.blue1, dn.blue2, dn.blue3 FROM frc_match m
+				 INNER JOIN alliance a
+				         ON m.match_id = a.match_id
+				 INNER JOIN alliance_member am
+				         ON am.alliance_id = a.alliance_id
+				 INNER JOIN alliance_member_outcome amo
+				         ON amo.team_number = am.team_number
+            				AND amo.alliance_id = a.alliance_id
+				 INNER JOIN alliance_outcome ao
+				         ON ao.alliance_id = a.alliance_id
+				 INNER JOIN denormalized_schedule dn 
+				         ON dn.match_id = m.match_id
+				 WHERE am.team_number = ?
+    				   AND m.event_code = ?
+			 ORDER BY m.match_type ASC, m.match_number DESC;`,
+			 [team_to_search, event_code],
+			 (error, results) =>
+			 (error)
+			 ? res.json({success: false, error: error})
+			 : res.json({success: true, data: results})
+			);
+    }
+    catch (err) {
+	res.json({success: false, error: err});
+    }
 });
 
 router.get('/getNextMatchNumber', (req, res) => {

@@ -15,8 +15,6 @@ import PickList from './PickList.js';
 import CustomQuery from './CustomQuery.js';
 import MatchAdder from './MatchAdder.js';
 
-
-
 // The base URL for the server.
 const serverURL = "http://localhost:3001";
 const refreshTime = 10;
@@ -27,14 +25,17 @@ class Strategy extends React.Component {
 	this.eventSelected = this.eventSelected.bind(this);
 	this.matchSelected = this.matchSelected.bind(this);
 	this.dataFilterChange = this.dataFilterChange.bind(this);
+	this.searchTeamChange = this.searchTeamChange.bind(this);
         this.state={events: [],
 		    teams: [],
 		    matches: [],
 		    next_match_info: [],
+		    data_spitter_output: [],
 		    scouting_output: [],
                     picklist: [],
 		    event_code: null,
 		    next_match: null,
+		    team_to_search: null,
 		    specific_scouting_output: false};
     }
 
@@ -60,9 +61,7 @@ class Strategy extends React.Component {
         this.getPicklist(this.state.event_code);
 	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
 	this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
-	console.log(this.state.next_match_info);
-	console.log("output:");
-	console.log(this.state.scouting_output);
+	this.getSpecificTeamsInfo(this.state.event_code, this.state.team_to_search);
     }
 
     // a new Event has been selected (in the event bar)
@@ -95,10 +94,15 @@ class Strategy extends React.Component {
     dataFilterChange(specific_scouting_output) {
 	this.setState({specific_scouting_output: specific_scouting_output});
 	console.log("specific_scouting_output:" + specific_scouting_output);
-	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
+	this.getScoutingOutput(this.state.event_code, specific_scouting_output); //this doesn't use state since setState is async and may run after this 
 	if (this.state.next_match && this.state.event_code) {
 	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
 	}
+    }
+
+    searchTeamChange(team_to_search) {
+	this.setState({team_to_search: team_to_search});
+	this.getSpecificTeamsInfo(this.state.event_code, team_to_search);
     }
 
 	
@@ -125,6 +129,11 @@ class Strategy extends React.Component {
     getNextMatchInfo(event_code, next_match, specific_scouting_output) {
 	axios.get(serverURL + "/api/getNextMatchInfo?event_code=" + event_code + "&next_match=" + next_match + "&specific_scouting_output=" + specific_scouting_output)
 	    .then((response) => this.setState({next_match_info: response.data.data }));
+    }
+
+    getSpecificTeamsInfo(event_code, team_to_search) {
+	axios.get(serverURL + "/api/getSpecificTeamsInfo?event_code=" + event_code + "&team_to_search=" + team_to_search)
+	    .then((response) => this.setState({data_spitter_output: response.data.data}));
     }
     
     //get the scouting output, then update our state
@@ -188,7 +197,11 @@ class Strategy extends React.Component {
 		/>
 	      </TabPanel>
 	      <TabPanel>
-		<DataSpitter/>
+		<DataSpitter event_code={this.state.event_code}
+	    valid_teams={this.state.teams}
+	    data_spitter_output={this.state.data_spitter_output}
+	    teamChange={this.searchTeamChange}
+		/>
 	      </TabPanel>
 	      <TabPanel>
 		<ScoutingOutput event_code={this.state.event_code}

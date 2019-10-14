@@ -5,6 +5,7 @@ class ScoutingOutput extends React.Component {
     constructor(props) {
 	super(props);
 	this.onFilterChange = this.onFilterChange.bind(this);
+	this.state = {specific_scouting_output: this.props.specific_scouting_output};
     }
 
     render() {
@@ -13,10 +14,10 @@ class ScoutingOutput extends React.Component {
   
 			 <h2>Scouting Output</h2>
 			 
-			 <div className="outputFilter">
+		<div className="outputFilter">
 			   <input type="checkbox" id="specificAllToggle" name="scouting_output_mode" value="specific" onChange={this.onFilterChange}/>
 			   <label htmlFor="specificAllToggle">Only current event</label>
-			 </div>
+		</div>
 			 
 			 {this.props.event_code ? (
 			 <table>
@@ -46,8 +47,9 @@ class ScoutingOutput extends React.Component {
 			 ) : <span>Select an event</span>}
 		       </div>
 		);
-	}
+    }
     	onFilterChange(event) {
+	    this.setState({specific_scouting_output: event.target.checked});
 	    // tell our parent that something changed.
 	    this.props.filterChange(event.target.checked);
 	}
