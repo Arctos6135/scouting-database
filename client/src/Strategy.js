@@ -96,7 +96,7 @@ class Strategy extends React.Component {
 	console.log("specific_scouting_output:" + specific_scouting_output);
 	this.getScoutingOutput(this.state.event_code, specific_scouting_output); //this doesn't use state since setState is async and may run after this 
 	if (this.state.next_match && this.state.event_code) {
-	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
+	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, specific_scouting_output);
 	}
     }
 
@@ -153,8 +153,7 @@ class Strategy extends React.Component {
     getNextMatchNumber(last_match_number, event_code) {
 	console.log("getting next match number with last match " + last_match_number);
 	axios.get(serverURL + "/api/getNextMatchNumber?event_code=" + event_code + "&last_match_number=" + last_match_number)
-	    .then((response) => this.setState({next_match: response.data.data.match_number}))
-	    .then(() => console.log(this.state.next_match));
+	    .then((response) => this.setState({next_match: response.data.data.match_number}));
     }
         
     // draw the entire strategyweb app

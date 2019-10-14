@@ -25,7 +25,9 @@ class Settings extends React.Component {
 	constructor(props) {
 		super(props);
 	    this.onEventSelect = this.onEventSelect.bind(this);
-	    this.onMatchEnter = this.onMatchEnter.bind(this);
+	    this.onMatchChange = this.onMatchChange.bind(this);
+	    this.onMatchSubmit = this.onMatchSubmit.bind(this);
+	    this.state = {last_match: null};
 	}
 
     // When user chooses an event from the event dropdown
@@ -34,8 +36,16 @@ class Settings extends React.Component {
 	this.props.onEventChange(e.target.value);
     }
     
-    onMatchEnter(e) {
-	this.props.onMatchChange(e.target.value);
+    onMatchChange(event) {
+	//this.props.onMatchChange(e.target.value);
+	this.setState({last_match: event.target.value});
+	//console.log("last " + event.target.value);
+    }
+    onMatchSubmit(event) {
+	event.preventDefault();
+	//console.log(event);
+	//console.log("last match " + this.state.last_match);
+	this.props.onMatchChange(this.state.last_match);
     }
 
 	render() {
@@ -53,9 +63,11 @@ class Settings extends React.Component {
 					       </option>)}
 		    
             </select>
-	    <h5> Next Match {this.props.next_match} </h5>
+			<h5> Next Match {this.props.next_match} </h5>
+			<form onSubmit={this.onMatchSubmit}>
 	    <label htmlFor="last_match_number"> Enter last match number </label>
-			<input type="text" id="last_match_number" name="last_match_number" size="4" required pattern="\d*" onChange={this.onMatchEnter}/>
+			<input type="text" id="last_match_number" name="last_match_number" size="4" required pattern="\d*" onChange={this.onMatchChange}/>
+			</form>
         </div>
     );
 	}
