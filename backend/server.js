@@ -200,6 +200,7 @@ router.get('/getScoutingOutput', (req, res) => {
 });
 
 router.get('/getSpecificTeamsInfo', (req, res) => {
+    //this query takes a few seconds to run, for some reason
     try {
 	const team_to_search = parseInt(req.query.team_to_search);
 	const event_code = req.query.event_code
@@ -259,6 +260,22 @@ router.get('/getNextMatchNumber', (req, res) => {
 			);
     }  catch (err) {
         res.json({success: false, error: err});
+    }
+});
+
+router.get('/runCustomQuery', (req, res) => {
+    try {
+	const db_query = req.query.query;
+	console.log(db_query);
+	connection.query(db_query, [],
+			 (error, results) =>
+			 (error)
+			 ? res.json({success: false, error: error})
+			 : res.json({success: true, data: results})
+			);
+    }
+    catch (error) {
+	res.json({success: false, error: error});
     }
 });
 

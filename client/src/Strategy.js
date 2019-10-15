@@ -22,10 +22,13 @@ const refreshTime = 10;
 class Strategy extends React.Component {
     constructor(props) {
         super(props);
+	
 	this.eventSelected = this.eventSelected.bind(this);
 	this.matchSelected = this.matchSelected.bind(this);
 	this.dataFilterChange = this.dataFilterChange.bind(this);
 	this.searchTeamChange = this.searchTeamChange.bind(this);
+	this.getCustomQueryResults = this.getCustomQueryResults.bind(this);
+	
         this.state={events: [],
 		    teams: [],
 		    matches: [],
@@ -33,6 +36,7 @@ class Strategy extends React.Component {
 		    data_spitter_output: [],
 		    scouting_output: [],
                     picklist: [],
+		    custom_query_results: [{}],
 		    event_code: null,
 		    next_match: null,
 		    team_to_search: null,
@@ -155,7 +159,12 @@ class Strategy extends React.Component {
 	axios.get(serverURL + "/api/getNextMatchNumber?event_code=" + event_code + "&last_match_number=" + last_match_number)
 	    .then((response) => this.setState({next_match: response.data.data.match_number}));
     }
-        
+
+    getCustomQueryResults(query) {
+	axios.get(serverURL + "/api/runCustomQuery?query=" + query)
+	    .then((response) => this.setState({custom_query_results: response.data.data}));
+    }
+    
     // draw the entire strategyweb app
     // This method returns the JSX (which looks like fancy HTML) for the component.
     // The only tricky bit is that we need to provide the header object with a callback
@@ -213,7 +222,8 @@ class Strategy extends React.Component {
 			  picks={this.state.picklist}/>
 	      </TabPanel>
 	      <TabPanel>
-		<CustomQuery/>
+		<CustomQuery results={this.state.custom_query_results}
+	    querySubmit={this.getCustomQueryResults}/>
 	      </TabPanel>
 	      <TabPanel>
 		<MatchAdder/>

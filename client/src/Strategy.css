@@ -67,3 +67,7 @@ th.lastRedTeam,td.lastRedTeam {
     margin-top:1em;
     margin-bottom:1em;
 }
+
+textarea {
+    font-family: Menlo, monospace;
+}
