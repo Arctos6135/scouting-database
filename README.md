@@ -15,6 +15,6 @@ To prepare the database, run these from the command line. They are configured fo
 `node load_teams.js`
 `node load_events.js`
 `node load_matches.js EVENT` (e.g. 2019onosh)
-`node parse_output`
+`node parse_output.js`
 
 To run the webapp, run `npm start`. It will open in your default browser at ports 3000(client) and 3001(server).
