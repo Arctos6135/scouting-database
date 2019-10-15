@@ -1,4 +1,4 @@
-This is the prototype strategy & scouting database of FRC team Arctos 6135, using a MySQL database and nodejs with the Blue Alliance API for getting teams. It is still in development, so it doesn't have many features yet.
+This is the prototype strategy & scouting database of FRC team Arctos 6135, using a MySQL database and nodejs with the Blue Alliance API for getting teams. It is still in development, but is has most of the key features of the old Arctos excel db.
 
 **Installation**  
 
@@ -15,5 +15,6 @@ To prepare the database, run these from the command line. They are configured fo
 `node load_teams.js`
 `node load_events.js`
 `node load_matches.js EVENT` (e.g. 2019onosh)
+`node parse_output`
 
 To run the webapp, run `npm start`. It will open in your default browser at ports 3000(client) and 3001(server).
