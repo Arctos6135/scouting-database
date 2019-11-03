@@ -71,3 +71,6 @@ th.lastRedTeam,td.lastRedTeam {
 textarea {
     font-family: Menlo, monospace;
 }
+p code {
+    background-color: rgb(217,217,217);
+}

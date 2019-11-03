@@ -14,6 +14,7 @@ import Teams from './Teams.js';
 import PickList from './PickList.js';
 import CustomQuery from './CustomQuery.js';
 import MatchAdder from './MatchAdder.js';
+import Help from './HelpInfo.js';
 
 // The base URL for the server.
 const serverURL = "http://localhost:3001";
@@ -191,6 +192,7 @@ class Strategy extends React.Component {
 		<Tab>Custom Query</Tab>
 		<Tab>Add Matches</Tab>
                 <Tab>Teams</Tab>
+		<Tab>Help</Tab>
               </TabList>
               <TabPanel>
                 <Matches event_code={this.state.event_code}
@@ -231,6 +233,9 @@ class Strategy extends React.Component {
 	      <TabPanel>
                 <Teams event_code={this.state.event_code}
 		       teams={this.state.teams}/>
+	      </TabPanel>
+	      <TabPanel>
+		<Help/>
 	      </TabPanel>
             </Tabs>
           </div>
