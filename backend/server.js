@@ -96,15 +96,8 @@ router. get('/getNextMatchInfo', (req, res) => {
 	if (specific_scouting_output) {
 	    console.log("specific next match");
 	    //this query fails to return teams not in scouting output. There is a problem with those views, not this program
-	    connection.query(`SELECT m.match_number,
-			     a.alliance_colour,
-			     am.team_number,
-			     sso.average_per_bot_score,
-                 sso.average_rocket_fraction,
-                 sso.average_climb_RP_fraction,
-                 sso.average_start_level,
-                 sso.max_climb_ability,
-                 sso.average_sand_hatch
+	    connection.query(`SELECT *
+          
                  FROM frc_match m
 			         INNER JOIN alliance a
 			                 ON a.match_id = m.match_id
@@ -125,15 +118,7 @@ router. get('/getNextMatchInfo', (req, res) => {
 
 	else {
 	    console.log("all");
-	    connection.query(`SELECT m.match_number,
-			     a.alliance_colour,
-			     am.team_number,
-			     aso.average_per_bot_score,
-                 aso.average_rocket_fraction,
-                 aso.average_climb_RP_fraction,
-                 aso.average_start_level,
-                 aso.max_climb_ability,
-			     aso.average_sand_hatch
+	    connection.query(`SELECT *
 			     FROM frc_match m
 			         INNER JOIN alliance a
 			                 ON a.match_id = m.match_id

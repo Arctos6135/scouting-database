@@ -105,8 +105,9 @@ INNER JOIN alliance_member t
 INNER JOIN team
         ON team.team_number = t.team_number
 WINDOW w AS (partition by m.match_id, a.alliance_colour ORDER BY t.team_number))
-SELECT m.event_code
-     , m.practice
+SELECT m.match_id
+	 , m.event_code
+     , m.match_type
      , m.match_number
      , r1.team_number as red1
      , r1.name        as red1_name
@@ -136,12 +137,93 @@ INNER JOIN match_team_pos b3
  
 CREATE OR REPLACE VIEW all_scouting_output AS 
 SELECT 	am.team_number, 
-		avg(ao.score)/3 AS 'average_per_bot_score', 
-        avg(ao.RP1_rocket)/3 AS 'average_rocket_fraction', 
-        avg(ao.RP2_climbed)/3 AS 'average_climb_RP_fraction', 
-        avg(amo.start_level) AS 'average_start_level',
-        max(amo.climb_level) AS 'max_climb_ability',
-        avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'average_sand_hatch' 
+		avg(ao.score)/3 AS 'avg_per_bot_score', 
+        avg(2*(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch +
+			   amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch)+
+			3*(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo + 
+               amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo)+
+			power(2,amo.climb_level)+amo.climb_level+floor(amo.climb_level/3)+
+            power(2,amo.assist_level)+amo.assist_level+floor(amo.assist_level/3)) AS 'avg_score',
+        avg(ao.RP1_rocket)/3 AS 'avg_rocket_RP_fraction', 
+        avg(amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'avg_rocket_RP',
+        
+        avg(ao.RP2_climbed)/3 AS 'avg_climb_RP_fraction',
+		avg((power(2,amo.climb_level)+amo.climb_level+floor(amo.climb_level/3))/15) AS 'avg_climb_RP',
+        
+        min(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'min_game_pieces',
+		max(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'max_game_pieces',
+		avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'avg_game_pieces',
+            
+        min(amo.start_level) AS 'min_start_level',
+        max(amo.start_level) AS 'max_start_level',
+        avg(amo.start_level) AS 'avg_start_level',
+        min(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'min_sand_hatch',
+        max(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'max_sand_hatch',
+        avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'avg_sand_hatch',
+        min(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo) AS 'min_sand_cargo',
+		max(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo) AS 'max_sand_cargo',
+        avg(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo) AS 'avg_sand_cargo',
+        
+        min(amo.tele_cs_hatch) AS 'min_tele_cs_hatch',
+        max(amo.tele_cs_hatch) AS 'max_tele_cs_hatch',
+        avg(amo.tele_cs_hatch) AS 'avg_tele_cs_hatch',
+        min(amo.tele_r1_hatch) AS 'min_tele_r1_hatch',
+        max(amo.tele_r1_hatch) AS 'max_tele_r1_hatch',
+        avg(amo.tele_r1_hatch) AS 'avg_tele_r1_hatch',
+        min(amo.tele_r2_hatch) AS 'min_tele_r2_hatch',
+        max(amo.tele_r2_hatch) AS 'max_tele_r2_hatch',
+        avg(amo.tele_r2_hatch) AS 'avg_tele_r2_hatch',
+        min(amo.tele_r3_hatch) AS 'min_tele_r3_hatch',
+        max(amo.tele_r3_hatch) AS 'max_tele_r3_hatch',
+        avg(amo.tele_r3_hatch) AS 'avg_tele_r3_hatch',
+        
+        min(amo.tele_cs_cargo) AS 'min_tele_cs_cargo',
+        max(amo.tele_cs_cargo) AS 'max_tele_cs_cargo',
+        avg(amo.tele_cs_cargo) AS 'avg_tele_cs_cargo',
+        min(amo.tele_r1_cargo) AS 'min_tele_r1_cargo',
+        max(amo.tele_r1_cargo) AS 'max_tele_r1_cargo',
+        avg(amo.tele_r1_cargo) AS 'avg_tele_r1_cargo',
+        min(amo.tele_r2_cargo) AS 'min_tele_r2_cargo',
+        max(amo.tele_r2_cargo) AS 'max_tele_r2_cargo',
+        avg(amo.tele_r2_cargo) AS 'avg_tele_r2_cargo',
+        min(amo.tele_r3_cargo) AS 'min_tele_r3_cargo',
+        max(amo.tele_r3_cargo) AS 'max_tele_r3_cargo',
+        avg(amo.tele_r3_cargo) AS 'avg_tele_r3_cargo',
+        
+        min(amo.defense_time) AS 'min_defense_time',
+		max(amo.defense_time) AS 'max_defense_time',
+        avg(amo.defense_time) AS 'avg_defense_time',
+        
+        min(amo.assist_level) AS 'min_assist_level',
+        max(amo.assist_level) AS 'max_assist_level',
+        avg(amo.assist_level) AS 'avg_assist_level',
+        
+        min(amo.climb_level) AS 'min_climb_level',
+        max(amo.climb_level) AS 'max_climb_level',
+        avg(amo.climb_level) AS 'avg_climb_level',
+        
+        avg(amo.tipped) AS 'avg_tipped',
+        avg(amo.broke) AS 'avg_broke',
+        max(amo.floor_hatch) AS 'floor_hatch',
+        min(amo.dropped_hatch) AS 'min_dropped_hatch',
+        max(amo.dropped_hatch) AS 'max_dropped_hatch',
+        avg(amo.dropped_hatch) AS 'avg_dropped_hatch',
+        
+        min(amo.penalties) AS 'min_penalties',
+        max(amo.penalties) AS 'max_penalties',
+        avg(amo.penalties) AS 'avg_penalties'
 FROM frc_match m
 	INNER JOIN alliance a
 			ON a.match_id = m.match_id
@@ -157,12 +239,93 @@ GROUP BY am.team_number;
 CREATE OR REPLACE VIEW specific_scouting_output AS 
 SELECT 	m.event_code,
 		am.team_number, 
-		avg(ao.score)/3 AS 'average_per_bot_score', 
-        avg(ao.RP1_rocket)/3 AS 'average_rocket_fraction', 
-        avg(ao.RP2_climbed)/3 AS 'average_climb_RP_fraction', 
-        avg(amo.start_level) AS 'average_start_level',
-        max(amo.climb_level) AS 'max_climb_ability',
-        avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'average_sand_hatch' 
+		avg(ao.score)/3 AS 'avg_per_bot_score', 
+        avg(2*(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch +
+			   amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch)+
+			3*(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo + 
+               amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo)+
+			power(2,amo.climb_level)+amo.climb_level+floor(amo.climb_level/3)+
+            power(2,amo.assist_level)+amo.assist_level+floor(amo.assist_level/3)) AS 'avg_score',
+        avg(ao.RP1_rocket)/3 AS 'avg_rocket_RP_fraction', 
+        avg(amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'avg_rocket_RP',
+        
+        avg(ao.RP2_climbed)/3 AS 'avg_climb_RP_fraction',
+		avg((power(2,amo.climb_level)+amo.climb_level+floor(amo.climb_level/3))/15) AS 'avg_climb_RP',
+        
+        min(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'min_game_pieces',
+		max(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'max_game_pieces',
+		avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch + 
+            amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo +
+            amo.tele_cs_hatch + amo.tele_r1_hatch + amo.tele_r2_hatch + amo.tele_r3_hatch +
+            amo.tele_cs_cargo + amo.tele_r1_cargo + amo.tele_r2_cargo + amo.tele_r3_cargo) AS 'avg_game_pieces',
+            
+        min(amo.start_level) AS 'min_start_level',
+        max(amo.start_level) AS 'max_start_level',
+        avg(amo.start_level) AS 'avg_start_level',
+        min(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'min_sand_hatch',
+        max(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'max_sand_hatch',
+        avg(amo.sand_cs_hatch + amo.sand_r1_hatch + amo.sand_r2_hatch + amo.sand_r3_hatch) AS 'avg_sand_hatch',
+        min(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo) AS 'min_sand_cargo',
+		max(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo) AS 'max_sand_cargo',
+        avg(amo.sand_cs_cargo + amo.sand_r1_cargo + amo.sand_r2_cargo + amo.sand_r3_cargo) AS 'avg_sand_cargo',
+        
+        min(amo.tele_cs_hatch) AS 'min_tele_cs_hatch',
+        max(amo.tele_cs_hatch) AS 'max_tele_cs_hatch',
+        avg(amo.tele_cs_hatch) AS 'avg_tele_cs_hatch',
+        min(amo.tele_r1_hatch) AS 'min_tele_r1_hatch',
+        max(amo.tele_r1_hatch) AS 'max_tele_r1_hatch',
+        avg(amo.tele_r1_hatch) AS 'avg_tele_r1_hatch',
+        min(amo.tele_r2_hatch) AS 'min_tele_r2_hatch',
+        max(amo.tele_r2_hatch) AS 'max_tele_r2_hatch',
+        avg(amo.tele_r2_hatch) AS 'avg_tele_r2_hatch',
+        min(amo.tele_r3_hatch) AS 'min_tele_r3_hatch',
+        max(amo.tele_r3_hatch) AS 'max_tele_r3_hatch',
+        avg(amo.tele_r3_hatch) AS 'avg_tele_r3_hatch',
+        
+         min(amo.tele_cs_cargo) AS 'min_tele_cs_cargo',
+        max(amo.tele_cs_cargo) AS 'max_tele_cs_cargo',
+        avg(amo.tele_cs_cargo) AS 'avg_tele_cs_cargo',
+        min(amo.tele_r1_cargo) AS 'min_tele_r1_cargo',
+        max(amo.tele_r1_cargo) AS 'max_tele_r1_cargo',
+        avg(amo.tele_r1_cargo) AS 'avg_tele_r1_cargo',
+        min(amo.tele_r2_cargo) AS 'min_tele_r2_cargo',
+        max(amo.tele_r2_cargo) AS 'max_tele_r2_cargo',
+        avg(amo.tele_r2_cargo) AS 'avg_tele_r2_cargo',
+        min(amo.tele_r3_cargo) AS 'min_tele_r3_cargo',
+        max(amo.tele_r3_cargo) AS 'max_tele_r3_cargo',
+        avg(amo.tele_r3_cargo) AS 'avg_tele_r3_cargo',
+        
+        min(amo.defense_time) AS 'min_defense_time',
+		max(amo.defense_time) AS 'max_defense_time',
+        avg(amo.defense_time) AS 'avg_defense_time',
+        
+        min(amo.assist_level) AS 'min_assist_level',
+        max(amo.assist_level) AS 'max_assist_level',
+        avg(amo.assist_level) AS 'avg_assist_level',
+        
+        min(amo.climb_level) AS 'min_climb_level',
+        max(amo.climb_level) AS 'max_climb_level',
+        avg(amo.climb_level) AS 'avg_climb_level',
+        
+        avg(amo.tipped) AS 'avg_tipped',
+        avg(amo.broke) AS 'avg_broke',
+        avg(amo.floor_hatch) AS 'avg_floor_hatch',
+        min(amo.dropped_hatch) AS 'min_dropped_hatch',
+        max(amo.dropped_hatch) AS 'max_dropped_hatch',
+        avg(amo.dropped_hatch) AS 'avg_dropped_hatch',
+        
+        min(amo.penalties) AS 'min_penalties',
+        max(amo.penalties) AS 'max_penalties',
+        avg(amo.penalties) AS 'avg_penalties'
 FROM frc_match m
 	INNER JOIN alliance a
 			ON a.match_id = m.match_id
@@ -175,5 +338,24 @@ FROM frc_match m
 		   AND amo.team_number = am.team_number
 GROUP BY m.event_code, am.team_number;
 
-DROP VIEW scouting_output;
+-- this view is for when you need to look something up quickly (like writing a very specific query on the fly)
+-- it uses the denormalized schedule so including team information is easy
+CREATE OR REPLACE VIEW id_sheet AS
+	SELECT ds.*, 
+		   m.match_id,
+           red.alliance_id AS 'red alliance_id',
+           blue.alliance_id AS 'blue alliance_id'
+	FROM denormalized_schedule ds
+		INNER JOIN frc_match m
+				ON ds.event_code = m.event_code
+			   AND ds.match_type = m.match_type
+               AND ds.match_number = m.match_number
+		INNER JOIN alliance red
+				ON m.match_id = red.match_id
+			   AND red.alliance_colour = 'red'
+		INNER JOIN alliance blue
+				ON m.match_id = blue.match_id
+                AND blue.alliance_colour = 'blue';
+        
+DROP VIEW match_teams;
 
