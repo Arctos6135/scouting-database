@@ -88,10 +88,13 @@ router.get('/getMatches', (req, res) => {
 
 router. get('/getNextMatchInfo', (req, res) => {
     try {
+	console.log("getNextMatchInfo");
 	const event_code = req.query.event_code;
-	const match_number = parseInt(req.query.next_match, 10);
-	console.log(match_number);
+	const match_number = parseInt(req.query.match_number, 10);
+	console.log("query" + req.query.match_number);
+	console.log("match num =" + match_number);
 	const specific_scouting_output = req.query.specific_scouting_output == "true";
+	const match_type = req.query.match_type;
 
 	if (specific_scouting_output) {
 	    console.log("specific next match");
@@ -106,10 +109,11 @@ router. get('/getNextMatchInfo', (req, res) => {
 			         INNER JOIN specific_scouting_output sso
 			                 ON sso.team_number = am.team_number
 			     WHERE m.match_number = ?
+			     AND m.match_type = ?
 			     AND m.event_code = ?
 			     AND sso.event_code = ?
 			     ORDER BY a.alliance_colour, am.team_number;`,
-			     [match_number, event_code, event_code],
+			     [match_number, match_type, event_code, event_code],
 			     (error, results) =>
 			     (error)
 			     ? res.json({success: false, error: error})
@@ -117,7 +121,7 @@ router. get('/getNextMatchInfo', (req, res) => {
 	}
 
 	else {
-	    console.log("all");
+	    console.log("all " + [match_number,match_type, event_code]);
 	    connection.query(`SELECT *
 			     FROM frc_match m
 			         INNER JOIN alliance a
@@ -127,9 +131,10 @@ router. get('/getNextMatchInfo', (req, res) => {
 			         INNER JOIN all_scouting_output aso
 			                 ON aso.team_number = am.team_number
 			     WHERE m.match_number = ?
+			     AND m.match_type = ?
 			       AND m.event_code = ?
 			     ORDER BY a.alliance_colour, am.team_number;`,
-			     [match_number, event_code],
+			     [match_number, match_type, event_code],
 			     (error, results) =>
 			     (error)
 			     ? res.json({success: false, error: error})
@@ -226,18 +231,20 @@ router.get('/getSpecificTeamsInfo', (req, res) => {
 router.get('/getNextMatchNumber', (req, res) => {
     try {
 	const last_match_number = req.query.last_match_number;
+	const match_type = req.query.match_type;
 	const event_code = req.query.event_code;
 	console.log("getting next match #");
-	connection.query(`SELECT m.match_number FROM frc_match m
+	connection.query(`SELECT m.match_number, m.match_type FROM frc_match m
 			 INNER JOIN alliance a
 			 ON a.match_id = m.match_id
 			 INNER JOIN alliance_member am
 			 ON am.alliance_id = a.alliance_id
 			 WHERE am.team_number = 6135
-			 AND m.match_number > ?
+			 AND (m.match_type > ?
+			      OR m.match_number > ?)
 			 AND m.event_code = ?
-			 ORDER BY m.match_number ASC`,
-			 [last_match_number, event_code],
+			 ORDER BY m.match_type ASC, m.match_number ASC`,
+			 [match_type, last_match_number, event_code],
 			 (error, results) =>
 			 (error)
 			 ? res.json({success: false, error: error})

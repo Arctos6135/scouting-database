@@ -39,7 +39,8 @@ class Strategy extends React.Component {
                     picklist: [],
 		    custom_query_results: [{}],
 		    event_code: null,
-		    next_match: null,
+		    next_match_number: null,
+		    next_match_type: null,
 		    team_to_search: null,
 		    specific_scouting_output: false};
     }
@@ -65,7 +66,8 @@ class Strategy extends React.Component {
         // add calls here to refresh any other dynamic component, or a clock, or whatever
         this.getPicklist(this.state.event_code);
 	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
-	this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
+	console.log("refresh match type: " + this.state.next_match_type);
+	this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.next_match_type, this.state.specific_scouting_output);
 	this.getSpecificTeamsInfo(this.state.event_code, this.state.team_to_search);
     }
 
@@ -78,10 +80,18 @@ class Strategy extends React.Component {
 	
     }
 
-    matchSelected(last_match_number) {
+    matchSelected(last_match_number, next_match_number, match_type) {
 	if (this.state.event_code) {
-	    this.getNextMatchNumber(last_match_number, this.state.event_code);
-	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.specific_scouting_output);
+	    if (!next_match_number){
+		console.log("getting next match number");
+		this.getNextMatchNumber(last_match_number, match_type, this.state.event_code);
+	    }
+	    else {
+		console.log("have next match num: " + next_match_number);
+		this.setState({next_match_number: next_match_number, match_type: match_type});
+	    }
+	    console.log("getting nma" + this.state.event_code, this.state_next_match, match_type);
+	   // this.getNextMatchInfo(this.state.event_code, this.state.next_match, match_type, this.state.specific_scouting_output);
 	}
     }
     
@@ -131,9 +141,10 @@ class Strategy extends React.Component {
 	    .then((response) => this.setState({ matches: response.data.data }));
     }
 
-    getNextMatchInfo(event_code, next_match, specific_scouting_output) {
-	axios.get(serverURL + "/api/getNextMatchInfo?event_code=" + event_code + "&next_match=" + next_match + "&specific_scouting_output=" + specific_scouting_output)
-	    .then((response) => this.setState({next_match_info: response.data.data }));
+    getNextMatchInfo(event_code, next_match_number, match_type, specific_scouting_output) {
+	
+	axios.get(serverURL + "/api/getNextMatchInfo?event_code=" + event_code + "&match_number=" + next_match_number + "&specific_scouting_output=" + specific_scouting_output + "&match_type=" + match_type)
+	    .then((response) => {this.setState({next_match_info: response.data.data }); console.log(response.data.data);});
     }
 
     getSpecificTeamsInfo(event_code, team_to_search) {
@@ -155,10 +166,13 @@ class Strategy extends React.Component {
     }
 
     //get the next match number, then update state
-    getNextMatchNumber(last_match_number, event_code) {
+    getNextMatchNumber(last_match_number, match_type, event_code) {
 	console.log("getting next match number with last match " + last_match_number);
-	axios.get(serverURL + "/api/getNextMatchNumber?event_code=" + event_code + "&last_match_number=" + last_match_number)
-	    .then((response) => this.setState({next_match: response.data.data.match_number}));
+	axios.get(serverURL + "/api/getNextMatchNumber?event_code=" + event_code + "&last_match_number=" + last_match_number + "&match_type=" + match_type)
+	    .then((response) => {
+		console.log("resp");
+		this.setState({next_match: response.data.data.match_number, next_match_type: response.data.data.match_type}); console.log(response.data.data);})
+	    .then(()=>console.log(this.state.next_match + " " + this.state.next_match_type));
     }
 
     getCustomQueryResults(query) {
@@ -178,6 +192,7 @@ class Strategy extends React.Component {
           <Header event_code={this.state.event_code} 
             events={this.state.events}
 	    next_match={this.state.next_match}
+	    match_type={this.state.next_match_type}
             eventSelected={this.eventSelected}
 	    matchSelected={this.matchSelected}
 		/>
@@ -200,7 +215,7 @@ class Strategy extends React.Component {
 	      </TabPanel>
 	      <TabPanel>
 		<NextMatch event_code={this.state.event_code}
-	    next_match={this.state.next_match}
+	    next_match={this.state.next_match_number}
 	    next_match_info={this.state.next_match_info}
 			   specific_scouting_output={this.state.specific_scouting_output}
 			   filterChange={this.dataFilterChange} 
