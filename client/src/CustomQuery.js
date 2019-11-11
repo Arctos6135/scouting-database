@@ -47,6 +47,7 @@ class CustomQuery extends React.Component {
 												  AND m.match_number =    
                                                   AND m.event_code =     
 														  AND a.alliance_colour =      ),         ;</code>
+														 <code>INSERT INTO alliance_outcome VALUES ((SELECT a.alliance_id FROM frc_match m INNER JOIN alliance a ON a.match_id = m.match_id WHERE m.match_type = ['string'] AND m.match_number = [number] AND m.event_code = ['string'] AND a.alliance_colour = ['string']), [score], [rp1 rocket], [rp2climb];</code>
 			<p>Tables and views: team, frc_event, frc_match, alliance, alliance_member, alliance_member_outcome, alliance_outcome, denormalized_schedule, all_scouting_output, specific_scouting_output</p>
 
 		<p>team</p>

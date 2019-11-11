@@ -7,12 +7,12 @@ class HelpInfo extends React.Component {
 			  <h2>Help</h2>
 			  <p>
 			    <em>How do I add matches to the schedule?</em>
-			  <p>Currently, you need to go the the command line, and enter <code>node parse_output.js event_code match_type match_number red1(#) red2(#) red3(#) blue1(#) blue2(#) blue3(#)</code> from the scouting-database directory. After that, you'll also need to actually add the data via the data spitter.
+			  <p>Currently, you need to go the the command line, and enter <code>node quick_insert_match.js event_code match_type match_number red1(#) red2(#) red3(#) blue1(#) blue2(#) blue3(#)</code> from the scouting-database directory. After that, you'll also need to actually add the data via custom query.
 			    
 			  </p>
 			  <em>Why isn't fresh data being added to Scouting Output and Data Spitter?</em>
 			  <p>
-			    This system only knows about data in the strategy MySQL server you should have running on your machine. To add alliance member outcome data to it from a correctly formatted output.json, run <code>node parse_output.js [optionally specify a file path and name]</code>. To add alliance-wide outcome data, either run <code>node load_alliance_outcomes.js</code> (requires Internet connection) or manually enter data from Custom Query.
+			This system only knows about data in the strategy MySQL server you should have running on your machine. To add alliance member outcome data to it from a correctly formatted output.json, run <code>node parse_output.js [optionally specify a file path and name]</code>. Today, run <code>node parse_output.js ../scouting-app/desktopSide/output.json</code>To add alliance-wide outcome data, either run <code>node load_alliance_outcomes.js</code> (requires Internet connection) or manually enter data from Custom Query.
 			    If you've run parse_output.js and scouting output hasn't been recalculated, then you need to add alliance outcomes for each match added.
 			  </p>
 			  <em>Other stuff isn't updating</em>
