@@ -22,10 +22,6 @@ async function load_matches(connection, matches) {
 // Returns a Promise to load a single match into the db
 async function load_match(connection, match) {
 
-    if (!is_qualifying(match)) {
-        // we do not want to load this, return an immediately-resolved Promise
-        return Promise.resolve();
-    }
 
     // extract the number of the i'th team on the alliance colour
     function get_team_number(colour, i) {
