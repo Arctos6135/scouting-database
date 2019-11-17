@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS strategy;
 CREATE DATABASE strategy;
 USE strategy;
 /*  MySQL 8 has pluggable authentication methods.
@@ -342,7 +343,6 @@ GROUP BY m.event_code, am.team_number;
 -- it uses the denormalized schedule so including team information is easy
 CREATE OR REPLACE VIEW id_sheet AS
 	SELECT ds.*, 
-		   m.match_id,
            red.alliance_id AS 'red alliance_id',
            blue.alliance_id AS 'blue alliance_id'
 	FROM denormalized_schedule ds
@@ -357,5 +357,3 @@ CREATE OR REPLACE VIEW id_sheet AS
 				ON m.match_id = blue.match_id
                 AND blue.alliance_colour = 'blue';
         
-DROP VIEW match_teams;
-
