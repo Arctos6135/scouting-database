@@ -5,6 +5,7 @@ USE strategy;
  The default is caching_sha2_password  but node mysql does not support it.
  Downgrade this account to use plaintext password authentication. */
 
+DROP USER IF EXISTS 'strategy'@'%';
 CREATE USER 'strategy'@'%' IDENTIFIED WITH mysql_native_password BY 'foo';
 GRANT SELECT,INSERT,UPDATE,DELETE
   ON strategy.*
