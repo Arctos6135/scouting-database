@@ -16,7 +16,8 @@ You need a The Blue Alliance API Key. If you want to use your own, edit that lin
 To prepare the database, run these from the command line. They are configured for the Ontario District, you will have to make some changes to use them elsewhere. 
 `node load_teams.js`
 `node load_events.js`
-`node load_matches.js EVENT` (e.g. 2019onosh)
+`node load_matches.js EVENT` (e.g. 2019oncmp1)
 `node parse_output.js`
+`node load_alliance_outcomes.js EVENT` (e.g. 2019oncmp1)
 
 To run the webapp, run `npm start`. It will open in your default browser at ports 3000(client) and 3001(server).
