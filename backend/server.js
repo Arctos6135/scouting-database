@@ -190,7 +190,6 @@ router.get('/getScoutingOutput', (req, res) => {
 });
 
 router.get('/getSpecificTeamsInfo', (req, res) => {
-    //this query takes a few seconds to run, for some reason
     try {
 	const team_to_search = parseInt(req.query.team_to_search);
 	const event_code = req.query.event_code
@@ -200,23 +199,27 @@ router.get('/getSpecificTeamsInfo', (req, res) => {
 			 ao.score,
 			 ao.RP1_rocket,
 			 ao.RP2_climbed,
-				 dn.red1, dn.red2, dn.red3,
-				 dn.blue1, dn.blue2, dn.blue3 FROM frc_match m
-				 INNER JOIN alliance a
+		     dn.red1, dn.red2, dn.red3,
+			 dn.blue1, dn.blue2, dn.blue3
+FROM frc_match m
+INNER JOIN alliance a
 				         ON m.match_id = a.match_id
-				 INNER JOIN alliance_member am
+INNER JOIN alliance_member am
 				         ON am.alliance_id = a.alliance_id
-				 INNER JOIN alliance_member_outcome amo
+INNER JOIN alliance_member_outcome amo
 				         ON amo.team_number = am.team_number
             				AND amo.alliance_id = a.alliance_id
-				 INNER JOIN alliance_outcome ao
+INNER JOIN alliance_outcome ao
 				         ON ao.alliance_id = a.alliance_id
 				 INNER JOIN denormalized_schedule dn 
 				         ON dn.match_id = m.match_id
+                         
 				 WHERE am.team_number = ?
     				   AND m.event_code = ?
+                       AND (dn.red1 = ? OR dn.red2 =  ? OR dn.red3 =  ?
+                            OR dn.blue1 = ? OR dn.blue2 = ? OR dn.blue3 = ?) 
 			 ORDER BY m.match_type ASC, m.match_number DESC;`,
-			 [team_to_search, event_code],
+			 [team_to_search, event_code, team_to_search, team_to_search, team_to_search, team_to_search, team_to_search, team_to_search],
 			 (error, results) =>
 			 (error)
 			 ? res.json({success: false, error: error})
