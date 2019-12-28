@@ -67,6 +67,10 @@ th.divider, td.divider {
 	border-right: 2px solid;
 }
 
+tr.bottomDivider {
+	border-bottom: 2px solid;
+}
+
 table {
 	border-collapse: collapse;
 }
