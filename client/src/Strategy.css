@@ -63,6 +63,10 @@ th.lastRedTeam,td.lastRedTeam {
   border-right: 1px solid;
 }
 
+table {
+	border-collapse: collapse;
+}
+
 .outputFilter {
     margin-top:1em;
     margin-bottom:1em;
