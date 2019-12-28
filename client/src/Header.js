@@ -48,7 +48,7 @@ class Settings extends React.Component {
     }
     onNextMatchChange(event) {
 	this.setState({next_match: event.target.value});
-	console.log("next" + event.target.value);
+	console.log("next " + event.target.value);
     }
     onMatchTypeChange(event) {
 	this.setState({match_type: event.target.value});
@@ -83,7 +83,7 @@ class Settings extends React.Component {
 	    <label htmlFor="last_match_number"> Type last match number </label>
 			<input type="text" id="last_match_number" name="last_match_number" size="4" pattern="\d*" onChange={this.onLastMatchChange}/>
 			<label htmlFor="next_match_number">Or don't type next match number</label>
-			<input type="text" id="next_match_number" name="next_match_number" size="4" pattern="\d*" onChange={this.onNextMatchNumChange}/>
+			<input type="text" id="next_match_number" name="next_match_number" size="4" pattern="\d*" onChange={this.onNextMatchChange}/>
 			<div>
 			<select onChange={this.onMatchTypeChange} id="match_type" required>
 			  <option key='none' value=''>Select match type</option>
