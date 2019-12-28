@@ -11,7 +11,7 @@ class Matches extends React.Component {
                     <tr><th className='matchNumber rightDivider'>Number</th>
                         <th>red 1</th>
                         <th>red 2</th>
-                        <th className='divider'>red 3</th>
+                        <th className='rightDivider'>red 3</th>
                         <th>blue 1</th>
                         <th>blue 2</th>
                         <th>blue 3</th>
@@ -23,7 +23,7 @@ class Matches extends React.Component {
                       <td className='matchNumber rightDivider'>{m.match_number}</td>
                       <td className='redTeam'>{m.red1}</td>
                       <td className='redTeam'>{m.red2}</td>
-                      <td className='redTeam divider'>{m.red3}</td>
+                      <td className='redTeam rightDivider'>{m.red3}</td>
                       <td className='blueTeam'>{m.blue1}</td>
                       <td className='blueTeam'>{m.blue2}</td>
                       <td className='blueTeam'>{m.blue3}</td>
