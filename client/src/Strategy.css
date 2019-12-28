@@ -71,19 +71,19 @@ table {
 	border-collapse: collapse;
 }
 
-td.redTeam {
+tr.redTeam, td.redTeam {
 	background-color: var(--red-team-colour);
 }
 
-td.blueTeam {
+tr.blueTeam, td.blueTeam {
 	background-color: var(--blue-team-colour);
 }
 
-tr:nth-child(odd)>td.redTeam {
+tr:nth-child(odd)>td.redTeam, tr:nth-child(odd).redTeam {
 	background-color: var(--red-team-odd-colour);
 }
 
-tr:nth-child(odd)>td.blueTeam {
+tr:nth-child(odd)>td.blueTeam, tr:nth-child(odd).blueTeam {
 	background-color: var(--blue-team-odd-colour);
 }
 

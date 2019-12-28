@@ -56,7 +56,7 @@ class NextMatch extends React.Component {
 		  </tr>
 		    </thead>
 		    <tbody>
-		      {this.props.next_match_info.map(team_output => <tr key={team_output.team_number}>
+		      {this.props.next_match_info.map(team_output => <tr key={team_output.team_number} className={ (team_output.alliance_colour === 'red') ? "redTeam" : "blueTeam"}>
 			<td>{team_output.match_number}</td>
 			<td>{team_output.alliance_colour}</td>
 			<td>{team_output.team_number}</td>
