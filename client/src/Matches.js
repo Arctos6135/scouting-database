@@ -1,6 +1,10 @@
 import React from 'react';
 
 class Matches extends React.Component {
+	state = {
+		team_to_search: 1114,
+	}
+
     render() {
         return(
             <div>
@@ -21,12 +25,12 @@ class Matches extends React.Component {
                 {this.props.matches.map(m => 
                     (<tr key={m.match_number}>
                       <td className='matchNumber rightDivider'>{m.match_number}</td>
-                      <td className={(m.red1 === 6135) ? "ourTeam" : "redTeam"}>{m.red1}</td>
-                      <td className={(m.red2 === 6135) ? "ourTeam" : "redTeam"}>{m.red2}</td>
-                      <td className={`rightDivider ${(m.red3 === 6135) ? "ourTeam" : "redTeam"}`}>{m.red3}</td>
-                      <td className={(m.blue1 === 6135) ? "ourTeam" : "blueTeam"}>{m.blue1}</td>
-                      <td className={(m.blue2 === 6135) ? "ourTeam" : "blueTeam"}>{m.blue2}</td>
-                      <td className={(m.blue3 === 6135) ? "ourTeam" : "blueTeam"}>{m.blue3}</td>
+                      <td className={`redTeam ${(m.red1 === 6135) ? "ourTeam" : (m.red1 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.red1}</td>
+                      <td className={`redTeam ${(m.red2 === 6135) ? "ourTeam" : (m.red2 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.red2}</td>
+                      <td className={`rightDivider redTeam ${(m.red3 === 6135) ? "ourTeam" : (m.red3 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.red3}</td>
+                      <td className={`blueTeam ${(m.blue1 === 6135) ? "ourTeam" : (m.blue1 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.blue1}</td>
+                      <td className={`blueTeam ${(m.blue2 === 6135) ? "ourTeam" : (m.blue2 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.blue2}</td>
+                      <td className={`blueTeam ${(m.blue3 === 6135) ? "ourTeam" : (m.blue3 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.blue3}</td>
                     </tr>))}
                 </tbody>
 			</table>) :<span>Select an event</span>}

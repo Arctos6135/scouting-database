@@ -5,10 +5,14 @@
 	--red-team-odd-colour: hsla(0, 85%, 61%, 0.7); 
 	--blue-team-odd-colour: hsla(210, 85%, 61%, 0.7);
 
-	/* A green background colour for cells that contain our team number */
-	--our-team-colour: hsla(140, 85%, 61%, 0.9);
+	/* A green background colour for cells that contain team to search */
+	--searched-team-colour: hsla(140, 85%, 61%, 0.9);
 
-	--divider: 2px solid;
+	/* Saturated background colours for cells that contain our team */
+	--our-team-red-colour: hsla(0, 100%, 30%, 1.0);
+	--our-team-blue-colour: hsla(210, 100%, 30%, 1.0);
+
+	--divider: 2px solid black;
 }
 
 .Strategy {
@@ -92,12 +96,24 @@ tr:nth-child(odd)>td.redTeam, tr:nth-child(odd).redTeam {
 	background-color: var(--red-team-odd-colour);
 }
 
-td.ourTeam {
-	background-color: var(--our-team-colour)
-}
-
 tr:nth-child(odd)>td.blueTeam, tr:nth-child(odd).blueTeam {
 	background-color: var(--blue-team-odd-colour);
+}
+
+td.searchedTeam {
+	background-color: var(--searched-team-colour) !important;
+}
+
+td.ourTeam {
+	color: white;
+}
+
+td.ourTeam.redTeam {
+	background-color: var(--our-team-red-colour) !important;
+}
+
+td.ourTeam.blueTeam {
+	background-color: var(--our-team-blue-colour) !important;
 }
 
 .outputFilter {
