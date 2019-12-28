@@ -1,15 +1,26 @@
 import React from 'react';
 
 class Matches extends React.Component {
-	state = {
-		team_to_search: 1114,
+	constructor(props) {
+		super(props);
+		this.onTeamChange = this.onTeamChange.bind(this)
+		this.state = {
+			team_to_search: 1114,
+		}
+	}
+
+	
+
+	onTeamChange(event) {
+		this.setState({team_to_search: parseInt(event.target.value)})
+		console.log("searching: " + event.target.value)
 	}
 
     render() {
         return(
             <div>
                 <h2>Matches</h2>
-                {this.props.event_code ? (
+                {this.props.event_code ? [
                 <table className='matches'>
                   <thead>
                     <tr><th className='matchNumber rightDivider'>Number</th>
@@ -33,7 +44,13 @@ class Matches extends React.Component {
                       <td className={`blueTeam ${(m.blue3 === 6135) ? "ourTeam" : (m.blue3 === this.state.team_to_search) ? "searchedTeam" : ""}`}>{m.blue3}</td>
                     </tr>))}
                 </tbody>
-			</table>) :<span>Select an event</span>}
+			</table>,
+
+			<form>
+				<input type="text" id="team_to_search" name="team_to_search" onChangeCapture={this.onTeamChange} />
+			</form>,
+
+					 ] :<span>Select an event</span>}
                 </div>
         );
     }
