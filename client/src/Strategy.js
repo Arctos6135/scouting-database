@@ -67,7 +67,7 @@ class Strategy extends React.Component {
         this.getPicklist(this.state.event_code);
 	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
 	console.log("refresh match type: " + this.state.next_match_type);
-	this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.next_match_type, this.state.specific_scouting_output);
+	this.getNextMatchInfo(this.state.event_code, this.state.next_match_number, this.state.next_match_type, this.state.specific_scouting_output);
 	this.getSpecificTeamsInfo(this.state.event_code, this.state.team_to_search);
     }
 
@@ -88,9 +88,9 @@ class Strategy extends React.Component {
 	    }
 	    else {
 		console.log("have next match num: " + next_match_number);
-		this.setState({next_match_number: next_match_number, match_type: match_type});
+		this.setState({next_match_number: next_match_number, next_match_type: match_type});
 	    }
-	    console.log("getting nma" + this.state.event_code, this.state_next_match, match_type);
+	    console.log("getting nma" + this.state.event_code, next_match_number, match_type);
 	   // this.getNextMatchInfo(this.state.event_code, this.state.next_match, match_type, this.state.specific_scouting_output);
 	}
     }
