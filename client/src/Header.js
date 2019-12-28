@@ -82,8 +82,8 @@ class Settings extends React.Component {
 			<form onSubmit={this.onMatchSubmit}>
 	    <label htmlFor="last_match_number"> Type last match number </label>
 			<input type="text" id="last_match_number" name="last_match_number" size="4" pattern="\d*" onChange={this.onLastMatchChange}/>
-			<label htmlFor="next_match_number">Or don't type next match number</label>
-			<input type="text" id="next_match_number" name="next_match_number" size="4" pattern="\d*" onChange={this.onNextMatchNumChange}/>
+			<label htmlFor="next_match_number">Or type next match number</label>
+			<input type="text" id="next_match_number" name="next_match_number" size="4" pattern="\d*" onChange={this.onNextMatchChange}/>
 			<div>
 			<select onChange={this.onMatchTypeChange} id="match_type" required>
 			  <option key='none' value=''>Select match type</option>
