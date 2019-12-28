@@ -8,7 +8,7 @@ class Matches extends React.Component {
                 {this.props.event_code ? (
                 <table className='matches'>
                   <thead>
-                    <tr><th className='matchNumber divider'>Number</th>
+                    <tr><th className='matchNumber rightDivider'>Number</th>
                         <th>red 1</th>
                         <th>red 2</th>
                         <th className='divider'>red 3</th>
@@ -20,7 +20,7 @@ class Matches extends React.Component {
                 <tbody>
                 {this.props.matches.map(m => 
                     (<tr key={m.match_number}>
-                      <td className='matchNumber divider'>{m.match_number}</td>
+                      <td className='matchNumber rightDivider'>{m.match_number}</td>
                       <td className='redTeam'>{m.red1}</td>
                       <td className='redTeam'>{m.red2}</td>
                       <td className='redTeam divider'>{m.red3}</td>

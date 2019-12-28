@@ -63,7 +63,7 @@ text-align: left;
 padding-right: 1em;
 }
 
-th.divider, td.divider {
+th.rightDivider, td.rightDivider {
 	border-right: 2px solid;
 }
 
