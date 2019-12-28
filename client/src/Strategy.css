@@ -55,12 +55,8 @@ text-align: left;
 padding-right: 1em;
 }
 
-th.matchNumber,td.matchNumber {
-  border-right: 1px solid;
-}
-
-th.lastRedTeam,td.lastRedTeam {
-  border-right: 1px solid;
+th.divider, td.divider {
+	border-right: 1px solid;
 }
 
 table {
