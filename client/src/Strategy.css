@@ -89,6 +89,10 @@ tr:nth-child(odd)>td.redTeam, tr:nth-child(odd).redTeam {
 	background-color: var(--red-team-odd-colour);
 }
 
+td.ourTeam {
+	background-color: hsla(140, 85%, 61%, 0.9);
+}
+
 tr:nth-child(odd)>td.blueTeam, tr:nth-child(odd).blueTeam {
 	background-color: var(--blue-team-odd-colour);
 }

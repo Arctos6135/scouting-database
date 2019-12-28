@@ -21,12 +21,12 @@ class Matches extends React.Component {
                 {this.props.matches.map(m => 
                     (<tr key={m.match_number}>
                       <td className='matchNumber rightDivider'>{m.match_number}</td>
-                      <td className='redTeam'>{m.red1}</td>
-                      <td className='redTeam'>{m.red2}</td>
-                      <td className='redTeam rightDivider'>{m.red3}</td>
-                      <td className='blueTeam'>{m.blue1}</td>
-                      <td className='blueTeam'>{m.blue2}</td>
-                      <td className='blueTeam'>{m.blue3}</td>
+                      <td className={(m.red1 === 6135) ? "ourTeam" : "redTeam"}>{m.red1}</td>
+                      <td className={(m.red2 === 6135) ? "ourTeam" : "redTeam"}>{m.red2}</td>
+                      <td className={`rightDivider ${(m.red3 === 6135) ? "ourTeam" : "redTeam"}`}>{m.red3}</td>
+                      <td className={(m.blue1 === 6135) ? "ourTeam" : "blueTeam"}>{m.blue1}</td>
+                      <td className={(m.blue2 === 6135) ? "ourTeam" : "blueTeam"}>{m.blue2}</td>
+                      <td className={(m.blue3 === 6135) ? "ourTeam" : "blueTeam"}>{m.blue3}</td>
                     </tr>))}
                 </tbody>
 			</table>) :<span>Select an event</span>}
