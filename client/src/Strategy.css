@@ -4,6 +4,8 @@
 	/* Decrease the opacity slightly for odd numbered rows in a table for readability */
 	--red-team-odd-colour: hsla(0, 85%, 61%, 0.7); 
 	--blue-team-odd-colour: hsla(210, 85%, 61%, 0.7);
+
+	--divider: 2px solid;
 }
 
 .Strategy {
@@ -64,11 +66,11 @@ padding-right: 1em;
 }
 
 th.rightDivider, td.rightDivider {
-	border-right: 2px solid;
+	border-right: var(--divider);
 }
 
 tr.bottomDivider {
-	border-bottom: 2px solid;
+	border-bottom: var(--divider);
 }
 
 table {
