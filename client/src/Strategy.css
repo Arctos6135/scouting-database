@@ -1,3 +1,11 @@
+:root {
+	--red-team-colour: hsla(0, 85%, 61%, 0.9);
+	--blue-team-colour: hsla(210, 85%, 61%, 0.9);
+	/* Decrease the opacity slightly for odd numbered rows in a table for readability */
+	--red-team-odd-colour: hsla(0, 85%, 61%, 0.7); 
+	--blue-team-odd-colour: hsla(210, 85%, 61%, 0.7);
+}
+
 .Strategy {
   min-height: 100vh;
   padding-left: 1em;
@@ -64,19 +72,19 @@ table {
 }
 
 td.redTeam {
-	background-color: hsla(0, 85%, 61%, 0.9);
+	background-color: var(--red-team-colour);
 }
 
 td.blueTeam {
-	background-color: hsla(210, 85%, 61%, 0.9);
+	background-color: var(--blue-team-colour);
 }
 
 tr:nth-child(odd)>td.redTeam {
-	background-color: hsla(0, 85%, 61%, 0.7);
+	background-color: var(--red-team-odd-colour);
 }
 
 tr:nth-child(odd)>td.blueTeam {
-	background-color: hsla(210, 85%, 61%, 0.7);
+	background-color: var(--blue-team-odd-colour);
 }
 
 .outputFilter {
