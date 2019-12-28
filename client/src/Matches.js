@@ -18,9 +18,15 @@ class Matches extends React.Component {
 
     render() {
         return(
-            <div>
+            <div className="matchesContainer">
                 <h2>Matches</h2>
                 {this.props.event_code ? [
+
+				<form className="searchTeam">
+					<label>Search Team: </label>
+					<input type="text" id="team_to_search" name="team_to_search" onChangeCapture={this.onTeamChange} />
+				</form>,
+
                 <table className='matches'>
                   <thead>
                     <tr><th className='matchNumber rightDivider'>Number</th>
@@ -45,10 +51,6 @@ class Matches extends React.Component {
                     </tr>))}
                 </tbody>
 			</table>,
-
-			<form>
-				<input type="text" id="team_to_search" name="team_to_search" onChangeCapture={this.onTeamChange} />
-			</form>,
 
 					 ] :<span>Select an event</span>}
                 </div>

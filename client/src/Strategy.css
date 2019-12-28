@@ -72,6 +72,15 @@ text-align: left;
 padding-right: 1em;
 }
 
+.matchesContainer {
+	display: inline-block;
+}
+
+.searchTeam {
+	float: right;
+	margin-left: 1vw;
+}
+
 th.rightDivider, td.rightDivider {
 	border-right: var(--divider);
 }
