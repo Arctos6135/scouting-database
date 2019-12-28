@@ -5,6 +5,9 @@
 	--red-team-odd-colour: hsla(0, 85%, 61%, 0.7); 
 	--blue-team-odd-colour: hsla(210, 85%, 61%, 0.7);
 
+	/* A green background colour for cells that contain our team number */
+	--our-team-colour: hsla(140, 85%, 61%, 0.9);
+
 	--divider: 2px solid;
 }
 
@@ -90,7 +93,7 @@ tr:nth-child(odd)>td.redTeam, tr:nth-child(odd).redTeam {
 }
 
 td.ourTeam {
-	background-color: hsla(140, 85%, 61%, 0.9);
+	background-color: var(--our-team-colour)
 }
 
 tr:nth-child(odd)>td.blueTeam, tr:nth-child(odd).blueTeam {
