@@ -136,3 +136,7 @@ textarea {
 p code {
     background-color: rgb(217,217,217);
 }
+
+.invalid-team {
+	border-color: red;
+}

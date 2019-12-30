@@ -243,7 +243,9 @@ class Strategy extends React.Component {
 	    querySubmit={this.getCustomQueryResults}/>
 	      </TabPanel>
 	      <TabPanel>
-		<MatchAdder/>
+		<MatchAdder valid_teams={this.state.teams}
+		submitMatches={this.submitMatches}
+		event_code={this.state.event_code}/>
 	      </TabPanel>
 	      <TabPanel>
                 <Teams event_code={this.state.event_code}
