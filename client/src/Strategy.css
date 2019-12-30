@@ -1,9 +1,9 @@
 :root {
-	--red-team-colour: hsla(0, 85%, 61%, 0.9);
-	--blue-team-colour: hsla(210, 85%, 61%, 0.9);
+	--red-team-colour: hsla(0, 85%, 61%, 0.7);
+	--blue-team-colour: hsla(210, 85%, 61%, 0.7);
 	/* Decrease the opacity slightly for odd numbered rows in a table for readability */
-	--red-team-odd-colour: hsla(0, 85%, 61%, 0.7); 
-	--blue-team-odd-colour: hsla(210, 85%, 61%, 0.7);
+	--red-team-odd-colour: hsla(0, 85%, 61%, 0.5); 
+	--blue-team-odd-colour: hsla(210, 85%, 61%, 0.5);
 
 	/* A green background colour for cells that contain team to search */
 	--searched-team-colour: hsla(140, 85%, 61%, 0.9);
