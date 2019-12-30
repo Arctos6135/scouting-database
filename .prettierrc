@@ -2,10 +2,10 @@
 	"tabWidth": 4,
 	"useTabs": true,
 	"semi": true,
-	"singleQuote": true,
-	"jsxSingleQuote": true,
+	"singleQuote": false,
+	"jsxSingleQuote": false,
 	"trailingComma": "none",
-	"bracketSpacing": true,
+	"bracketSpacing": false,
 	"jsxBracketSameLine": false,
 	"arrowParens": "avoid",
 	"endOfLine": "lf"
