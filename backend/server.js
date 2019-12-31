@@ -307,6 +307,38 @@ router.get('/getPicklist', (req, res) =>  {
     }
 });
 
+//for each match, find the team who did the most defense, and return their defense time
+router.get('/getMaximumDefender', (req, res) => {
+	const event_code = req.query.event_code;
+		try {
+			connection.query(`SELECT m.match_number, am.team_number, amo.defense_time FROM frc_match m
+			INNER JOIN alliance a
+					ON a.match_id = m.match_id
+			INNER JOIN alliance_member am
+					ON am.alliance_id = m.match_id
+			INNER JOIN alliance_member_outcome amo
+					ON amo.team_number = am.team_number
+				   AND amo.alliance_id = am.alliance_id
+			WHERE amo.defense_time = (SELECT MAX(amo_sub.defense_time) FROM frc_match m_sub
+			INNER JOIN alliance a_sub
+					ON a_sub.match_id = m_sub.match_id
+			INNER JOIN alliance_member am_sub
+					ON am_sub.alliance_id = m_sub.match_id
+			INNER JOIN alliance_member_outcome amo_sub
+					ON amo_sub.team_number = am_sub.team_number
+				   AND amo_sub.alliance_id = am_sub.alliance_id WHERE m_sub.match_id = m.match_id )
+			AND amo.defense_time > 0 
+			AND m.event_code = ? 
+			AND m.match_type = 'qm';`, 
+			[event_code], 
+			(error, results) => error 
+			? res.json({success: false, error: error})
+			: res.json({success: true, data: results}));
+		}
+		catch (error) {
+			res.json({success: false, error: error});
+		}
+});
 
 // All API requests are under the url /api, e.g. /api/getTeams
 app.use('/api', router);

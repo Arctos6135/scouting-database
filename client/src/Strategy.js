@@ -37,7 +37,8 @@ class Strategy extends React.Component {
 		    data_spitter_output: [],
 		    scouting_output: [],
                     picklist: [],
-		    custom_query_results: [{}],
+			custom_query_results: [{}],
+			maximum_defender_data: [],
 		    event_code: null,
 		    next_match_number: null,
 		    next_match_type: null,
@@ -67,7 +68,7 @@ class Strategy extends React.Component {
         this.getPicklist(this.state.event_code);
 	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
 	console.log("refresh match type: " + this.state.next_match_type);
-	this.getNextMatchInfo(this.state.event_code, this.state.next_match_number, this.state.next_match_type, this.state.specific_scouting_output);
+	this.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.next_match_type, this.state.specific_scouting_output);
 	this.getSpecificTeamsInfo(this.state.event_code, this.state.team_to_search);
     }
 
@@ -88,9 +89,9 @@ class Strategy extends React.Component {
 	    }
 	    else {
 		console.log("have next match num: " + next_match_number);
-		this.setState({next_match_number: next_match_number, next_match_type: match_type});
+		this.setState({next_match_number: next_match_number, match_type: match_type});
 	    }
-	    console.log("getting nma" + this.state.event_code, next_match_number, match_type);
+	    console.log("getting nma" + this.state.event_code, this.state_next_match, match_type);
 	   // this.getNextMatchInfo(this.state.event_code, this.state.next_match, match_type, this.state.specific_scouting_output);
 	}
     }
@@ -100,7 +101,8 @@ class Strategy extends React.Component {
 	    console.log("getting event info");
 	    this.getTeams(event_code);
             this.getMatches(event_code);
-            this.getScoutingOutput(event_code, this.state.specific_scouting_output);
+			this.getScoutingOutput(event_code, this.state.specific_scouting_output);
+			
         }
     }
 
@@ -178,7 +180,12 @@ class Strategy extends React.Component {
     getCustomQueryResults(query) {
 	axios.get(serverURL + "/api/runCustomQuery?query=" + query)
 	    .then((response) => this.setState({custom_query_results: response.data.data}));
-    }
+	}
+	
+	getMaximumDefender(event_code) {
+		axios.get(serverURL + "/api/getMaximumDefender?event_code=" + event_code)
+			.then((response) => this.setState({maximum_defender_data: response.data.data}));
+	}
     
     // draw the entire strategyweb app
     // This method returns the JSX (which looks like fancy HTML) for the component.
