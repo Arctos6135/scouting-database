@@ -91,7 +91,7 @@ class Strategy extends React.Component {
 		this.setState({next_match_number: next_match_number, next_match_type: match_type});
 	    }
 	    console.log("getting nma" + this.state.event_code, next_match_number, match_type);
-	   // this.getNextMatchInfo(this.state.event_code, this.state.next_match, match_type, this.state.specific_scouting_output);
+	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, match_type, this.state.specific_scouting_output);
 	}
     }
     
