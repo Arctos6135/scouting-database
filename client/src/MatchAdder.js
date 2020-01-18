@@ -33,6 +33,8 @@ class MatchAdder extends React.Component {
 		}
         return (
               <div>
+				  <h2>Add Matches</h2>
+				  {this.props.event_code ?
 				  <form id="match-adder" onSubmit={this.onMatchesSubmit}>
 					  <input type="submit" value="Submit Matches"/>
 					  <table>
@@ -50,6 +52,7 @@ class MatchAdder extends React.Component {
 						  </tbody>
 					  </table>
 				  </form>
+				  : <span>Select an event</span>}
 			  </div>
         );
 	}
