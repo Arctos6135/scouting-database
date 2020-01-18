@@ -17,7 +17,7 @@ class NextMatch extends React.Component {
 		    <label htmlFor="specificAllToggle">Only current event</label>
 		  </div>
 		  
-		  {this.props.event_code && this.props.next_match_info ? (
+		  {this.props.event_code && (this.props.next_match_info && this.props.next_match_info.length > 0) ? (
 		  <table>
 		    <thead>
 		      <tr>

@@ -156,7 +156,7 @@ class Strategy extends React.Component {
     getScoutingOutput(event_code, specific_scouting_output) {
 	//console.log(specific_scouting_output);
 	axios.get(serverURL + "/api/getScoutingOutput?event_code=" + event_code + "&specific_scouting_output=" + specific_scouting_output)
-	    .then((response) => this.setState({ scouting_output: response.data.data }));
+	    .then((response) => this.setState({ scouting_output: response.data.data }, ));
     }
     
     // get the picklist

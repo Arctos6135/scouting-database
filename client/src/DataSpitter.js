@@ -18,7 +18,7 @@ class DataSpitter extends React.Component {
 		<input type="text" id="teamToSearch" name="teamToSearch" value={this.team_to_search} onChange={this.onTeamChange} size="5"/>
 		<label htmlFor="teamToSearch"> {this.state.valid_number ? "valid - hit enter to submit" : "invalid"} </label>
 </form>
-	    {this.props.event_code && this.props.data_spitter_output ? (
+	    {this.props.event_code && (this.props.data_spitter_output && this.props.data_spitter_output.length > 0) ? (
 		<table>
 		  <thead>
 		    <tr>
