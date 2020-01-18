@@ -4,6 +4,8 @@
 const tba = require('./tba.js');
 const db = require('./scouting.js');
 
+const district_key = "2019ont"
+
 //# Using connection to database, add team_number with name
 function add_team(connection, team_number, name) {
 	console.log(team_number + " "  + name);
@@ -16,13 +18,13 @@ function add_team(connection, team_number, name) {
 					 });
 }
 
-function is_Ontario(x) {
+/* function is_Ontario(x) {
 	return x.state_prov == "Ontario";
-}
+} */
 
 if (require.main === module) {
 	db.with_connection(connection =>
-					   tba.all_teams(x => is_Ontario(x) && add_team(connection, x.team_number, x.nickname),
+					   tba.all_teams_from_district(district_key, add_team(connection, x.team_number, x.nickname),
 									 () => {connection.end()}
 									));
 }

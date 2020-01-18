@@ -22,7 +22,8 @@ class Matches extends React.Component {
                 <h2>Matches</h2>
                 {this.props.event_code ? [
 
-				<form className="searchTeam">
+				<form className="searchTeam" onSubmit={event => {event.preventDefault()}}> 
+				{/* The onSubmit event is passed to event.preventDefault() to stop the page from refreshing when you press enter accidentally */}
 					<label>Search Team: </label>
 					<input type="text" id="team_to_search" name="team_to_search" onChangeCapture={this.onTeamChange} />
 				</form>,
