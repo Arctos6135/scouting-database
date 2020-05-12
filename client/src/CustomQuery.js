@@ -1,4 +1,5 @@
 import React from 'react';
+import DataTable from './DataTable.js';
 
 class CustomQuery extends React.Component {
     constructor(props){
@@ -18,24 +19,7 @@ class CustomQuery extends React.Component {
 		  <div/>
 		  <input type="submit" value="Query"/>
 		</form>
-		{this.props.results ? (
-			<div>
-			  <table>
-			    <thead>
-			      <tr>
-				{Object.keys(this.props.results[0]).map((key) =>
-									<th key={key}>{key}</th>)}
-			      </tr>
-			    </thead>
-			    <tbody>
-			{this.props.results.map((result, index) =>
-						<tr key={index}>
-						{Object.keys(result).map(header => 
-									 <td key={result[header]}>{result[header]}</td>)}
-						</tr>)}
-			    </tbody>
-			  </table>
-			</div>) : console.log("nothing") }
+		<DataTable data={this.props.results}/>
 		<h3>Fun queries/reference:</h3>
 		<p>Manually enter data (after quick adding match from command line). Fill blanks with right info</p>
 		<code>   INSERT INTO alliance_member_outcome VALUES ((SELECT a.alliance_id FROM frc_match m INNER JOIN alliance a ON a.match_id = m.match_id WHERE m.match_type =     AND m.match_number =    AND m.event_code =           AND a.alliance_colour =     ),         ;</code>
