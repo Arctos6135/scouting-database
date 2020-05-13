@@ -235,6 +235,9 @@ router.get('/getNextMatchNumber', (req, res) => {
     try {
 	const last_match_number = req.query.last_match_number;
 	const match_type = req.query.match_type;
+	//MySQL treats enums mostly as strings (when comparing them to strings), but can cast them to numbers
+	//(by their index as initially defined in schema) to compare to numbers. comparing m.match_type > 'qm' produces 
+	//strange results, so for consistency we compare m.match_type + 0 > 2 ('qm''s index in the schema)
 	const event_code = req.query.event_code;
 	console.log("getting next match #");
 	connection.query(`SELECT m.match_number, m.match_type FROM frc_match m
@@ -243,11 +246,13 @@ router.get('/getNextMatchNumber', (req, res) => {
 			 INNER JOIN alliance_member am
 			 ON am.alliance_id = a.alliance_id
 			 WHERE am.team_number = 6135
-			 AND (m.match_type > ?
-			      OR m.match_number > ?)
+			 AND (m.match_type + 0 > 
+				(SELECT match_type + 0 FROM frc_match WHERE match_type = ? LIMIT 1) 
+			OR (m.match_number > ? AND m.match_type+0 = 
+				(SELECT match_type + 0 FROM frc_match WHERE match_type = ? LIMIT 1)))
 			 AND m.event_code = ?
 			 ORDER BY m.match_type ASC, m.match_number ASC`,
-			 [match_type, last_match_number, event_code],
+			 [match_type, last_match_number, match_type, event_code],
 			 (error, results) =>
 			 (error)
 			 ? res.json({success: false, error: error})
