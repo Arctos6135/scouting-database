@@ -89,8 +89,9 @@ class Strategy extends React.Component {
 			if (!next_match_number){
 				DataGetter.getNextMatchNumber(last_match_number, match_type, this.state.event_code)
 					.then(data => this.setState({next_match: data.match_number, next_match_type: data.match_type}) 
-									&& DataGetter.getNextMatchInfo(this.state.event_code, data.match_number, data.match_type, this.state.specific_scouting_output)
-										.then(data => this.setState({next_match_info: data})));
+									//&& DataGetter.getNextMatchInfo(this.state.event_code, data.match_number, data.match_type, this.state.specific_scouting_output)
+									//	.then(data => this.setState({next_match_info: data}))
+					);
 					//.then(data => DataGetter.getNextMatchInfo(this.state.event_code, data.match_number, data.match_type, this.state.specific_scouting_output));
 			}
 			else {
@@ -129,7 +130,8 @@ class Strategy extends React.Component {
 
     searchTeamChange(team_to_search) {
 		this.setState({team_to_search: team_to_search});
-		DataGetter.getSpecificTeamsInfo(this.state.event_code, team_to_search).then(data => this.setState({data_spitter_output: data}));
+		DataGetter.getSpecificTeamsInfo(this.state.event_code, team_to_search)
+			.then(data => this.setState({data_spitter_output: data}));
 	}
 	
 	getCustomQueryResults(query){
