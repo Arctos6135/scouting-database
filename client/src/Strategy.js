@@ -1,10 +1,9 @@
 import React from 'react';
-import axios from 'axios';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 
 import './Strategy.css';
-import dg from './DataGetter';
+import DG from './DataGetter';
 import Header from './Header.js';
 import Footer from './Footer.js';
 import Matches from './Matches.js';
@@ -18,9 +17,8 @@ import MatchAdder from './MatchAdder.js';
 import Help from './HelpInfo.js';
 
 // The base URL for the server.
-const serverURL = "http://localhost:3001";
 const refreshTime = 10;
-const DataGetter = new dg;
+const DataGetter = new DG;
 
 
 class Strategy extends React.Component {
@@ -221,11 +219,5 @@ class Strategy extends React.Component {
         );
     }
 }
-
-// return the URL to invoke the API method on the server.
-function api(method) {
-    return serverURL + "/api/" + method;
-}
-
 
 export default Strategy;
