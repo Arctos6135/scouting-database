@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import "react-tabs/style/react-tabs.css";
 
 import './Strategy.css';
+import dg from './DataGetter';
 import Header from './Header.js';
 import Footer from './Footer.js';
 import Matches from './Matches.js';
@@ -19,6 +20,8 @@ import Help from './HelpInfo.js';
 // The base URL for the server.
 const serverURL = "http://localhost:3001";
 const refreshTime = 10;
+const DataGetter = new dg;
+
 
 class Strategy extends React.Component {
     constructor(props) {
@@ -30,29 +33,30 @@ class Strategy extends React.Component {
 	this.searchTeamChange = this.searchTeamChange.bind(this);
 	this.getCustomQueryResults = this.getCustomQueryResults.bind(this);
 	
-        this.state={events: [],
+        this.state={
+			events: [],
 		    teams: [],
 		    matches: [],
 		    next_match_info: [],
 		    data_spitter_output: [],
 		    scouting_output: [],
-                    picklist: [],
+            picklist: [],
 		    custom_query_results: [{}],
 		    event_code: null,
 		    next_match_number: null,
 		    next_match_type: null,
 		    team_to_search: null,
-		    specific_scouting_output: false};
+			specific_scouting_output: false};
+			
     }
 
     // React calls this method (once) after the component has been rendered.
     // Ask the server for the set of all known events, and if the user has selected an event,
     // get the event-specific information
     componentDidMount() {
-        this.getEvents();
-        this.getEventSpecificInfo(this.state.event_code);
+        DataGetter.getEvents().then((data) => this.setState({events: data}));
         // start an automatic-refresh loop.  Every 10 seconds (set by refreshTime constant) update things
-        this.interval = setInterval(() => this.refresh(), refreshTime * 1000);
+    	this.interval = setInterval(() => this.refresh(), refreshTime * 1000);
     }
 
     // When the component is going away it should clean up after itself.
@@ -64,122 +68,74 @@ class Strategy extends React.Component {
     // This method does any periodic refreshing we want.
     refresh() {
         // add calls here to refresh any other dynamic component, or a clock, or whatever
-        this.getPicklist(this.state.event_code);
-	this.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output);
-	console.log("refresh match type: " + this.state.next_match_type);
-	this.getNextMatchInfo(this.state.event_code, this.state.next_match_number, this.state.next_match_type, this.state.specific_scouting_output);
-	this.getSpecificTeamsInfo(this.state.event_code, this.state.team_to_search);
+        DataGetter.getPicklist(this.state.event_code).then(data => this.setState({picklist: data}));
+		DataGetter.getScoutingOutput(this.state.event_code, this.state.specific_scouting_output)
+			.then(data => this.setState({ scouting_output: data }));
+		DataGetter.getNextMatchInfo(this.state.event_code, this.state.next_match_number, this.state.next_match_type, this.state.specific_scouting_output)
+			.then(data => this.setState({next_match_info: data}));
+		DataGetter.getSpecificTeamsInfo(this.state.event_code, this.state.team_to_search)
+			.then(data => this.setState({data_spitter_output: data}));
     }
 
     // a new Event has been selected (in the event bar)
     eventSelected(event_code) {
         // Remember the event_code
-	this.setState({event_code: event_code});
-	console.log("event_code:" + event_code);
+		this.setState({event_code: event_code});
         this.getEventSpecificInfo(event_code);
-	
     }
 
     matchSelected(last_match_number, next_match_number, match_type) {
-	if (this.state.event_code) {
-	    if (!next_match_number){
-		console.log("getting next match number");
-		this.getNextMatchNumber(last_match_number, match_type, this.state.event_code);
-	    }
-	    else {
-		console.log("have next match num: " + next_match_number);
-		this.setState({next_match_number: next_match_number, next_match_type: match_type});
-	    }
-	    console.log("getting nma" + this.state.event_code, next_match_number, match_type);
-	   // this.getNextMatchInfo(this.state.event_code, this.state.next_match, match_type, this.state.specific_scouting_output);
-	}
+		if (this.state.event_code) {
+			if (!next_match_number){
+				DataGetter.getNextMatchNumber(last_match_number, match_type, this.state.event_code)
+					.then(data => this.setState({next_match: data.match_number, next_match_type: data.match_type}) 
+									&& DataGetter.getNextMatchInfo(this.state.event_code, data.match_number, data.match_type, this.state.specific_scouting_output)
+										.then(data => this.setState({next_match_info: data})));
+					//.then(data => DataGetter.getNextMatchInfo(this.state.event_code, data.match_number, data.match_type, this.state.specific_scouting_output));
+			}
+			else {
+				//console.log("have next match num: " + next_match_number);
+				this.setState({next_match_number: next_match_number, next_match_type: match_type});
+				DataGetter.getNextMatchInfo(this.state.event_code, next_match_number, match_type, this.state.specific_scouting_output)
+					.then(data => this.setState({next_match_info: data}));
+			}
+		}
     }
     
     getEventSpecificInfo(event_code) {
         if (event_code) {
 	    console.log("getting event info");
-	    this.getTeams(event_code);
-            this.getMatches(event_code);
-            this.getScoutingOutput(event_code, this.state.specific_scouting_output);
+			DataGetter.getTeams(event_code)
+				.then(data => this.setState({teams: data}));
+			DataGetter.getMatches(event_code)
+				.then(data => this.setState({matches: data}));
+			DataGetter.getScoutingOutput(event_code, this.state.specific_scouting_output)
+				.then(data => this.setState({ scouting_output: data }));
         }
     }
 
     //this method handles both next match and scouting output's specific/all toggle.
     //In the future when they have more settings we'll probably want to separate them
     dataFilterChange(specific_scouting_output) {
-	this.setState({specific_scouting_output: specific_scouting_output});
-	console.log("specific_scouting_output:" + specific_scouting_output);
-	this.getScoutingOutput(this.state.event_code, specific_scouting_output); //this doesn't use state since setState is async and may run after this 
-	if (this.state.next_match && this.state.event_code) {
-	    this.getNextMatchInfo(this.state.event_code, this.state.next_match, specific_scouting_output);
-	}
+		this.setState({specific_scouting_output: specific_scouting_output});
+		console.log("specific_scouting_output:" + specific_scouting_output);
+		DataGetter.getScoutingOutput(this.state.event_code, specific_scouting_output)
+			.then(data => this.setState({scouting_output: data})); //this doesn't use state since setState is async and may run after this 
+		if (this.state.next_match && this.state.event_code) {
+			DataGetter.getNextMatchInfo(this.state.event_code, this.state.next_match, this.state.next_match_type, specific_scouting_output)
+				.then((data) => this.setState({next_match_info: data }));
+		}
     }
 
     searchTeamChange(team_to_search) {
-	this.setState({team_to_search: team_to_search});
-	this.getSpecificTeamsInfo(this.state.event_code, team_to_search);
-    }
-
+		this.setState({team_to_search: team_to_search});
+		DataGetter.getSpecificTeamsInfo(this.state.event_code, team_to_search).then(data => this.setState({data_spitter_output: data}));
+	}
 	
-    // Get the list of all events.  (axios returns a Promise to get it)
-    // after it arrives, update our state with the response.
-    getEvents() {
-        axios.get(api("getEvents"))
-	    .then(response => this.setState({ events: response.data.data}));
-    }
-    
-    // get the set of teams at the current event, then update our state
-    getTeams(event_code) {
-	axios.get("http://localhost:3001/api/getTeams?event_code=" + event_code)
-	    .then((response) => this.setState({ teams: response.data.data }));
-    }
-    
-    // get the list of matches at the current event, then update our state
-    getMatches(event_code) {
-	console.log("getting schedule");
-	axios.get("http://localhost:3001/api/getMatches?event_code=" + event_code)
-	    .then((response) => this.setState({ matches: response.data.data }));
-    }
+	getCustomQueryResults(query){
+		DataGetter.getCustomQueryResults(query).then(data => this.setState({custom_query_results: data}));
+	}
 
-    getNextMatchInfo(event_code, next_match_number, match_type, specific_scouting_output) {
-	
-	axios.get(serverURL + "/api/getNextMatchInfo?event_code=" + event_code + "&match_number=" + next_match_number + "&specific_scouting_output=" + specific_scouting_output + "&match_type=" + match_type)
-	    .then((response) => {this.setState({next_match_info: response.data.data }); console.log(response.data.data);});
-    }
-
-    getSpecificTeamsInfo(event_code, team_to_search) {
-	axios.get(serverURL + "/api/getSpecificTeamsInfo?event_code=" + event_code + "&team_to_search=" + team_to_search)
-	    .then((response) => this.setState({data_spitter_output: response.data.data}));
-    }
-    
-    //get the scouting output, then update our state
-    getScoutingOutput(event_code, specific_scouting_output) {
-	//console.log(specific_scouting_output);
-	axios.get(serverURL + "/api/getScoutingOutput?event_code=" + event_code + "&specific_scouting_output=" + specific_scouting_output)
-	    .then((response) => this.setState({ scouting_output: response.data.data }));
-    }
-    
-    // get the picklist
-    getPicklist(event_code) {
-		axios.get(serverURL + "/api/getPicklist?event_code=" + event_code)
-			.then((response) => this.setState({ picklist: response.data.data }));
-    }
-
-    //get the next match number, then update state
-    getNextMatchNumber(last_match_number, match_type, event_code) {
-	console.log("getting next match number with last match " + last_match_number);
-	axios.get(serverURL + "/api/getNextMatchNumber?event_code=" + event_code + "&last_match_number=" + last_match_number + "&match_type=" + match_type)
-	    .then((response) => {
-		console.log("resp");
-		this.setState({next_match: response.data.data.match_number, next_match_type: response.data.data.match_type}); console.log(response.data.data);})
-	    .then(()=>console.log(this.state.next_match + " " + this.state.next_match_type));
-    }
-
-    getCustomQueryResults(query) {
-	axios.get(serverURL + "/api/runCustomQuery?query=" + query)
-	    .then((response) => this.setState({custom_query_results: response.data.data}));
-    }
-    
     // draw the entire strategyweb app
     // This method returns the JSX (which looks like fancy HTML) for the component.
     // The only tricky bit is that we need to provide the header object with a callback
