@@ -55,9 +55,9 @@ function callPromise(method, parameters, ...param_vals){
 //creates a string that the server gets sent as the request. some hairy string things let the rest of the data getter look tidy
 function api(method, parameters, param_vals){
     return serverURL + "/api/" + method + (parameters 
-        ? parameters.map((param,index) => (index == 0 ? "?" : "&" ) + param + "=" + param_vals[index])
+        ? "?" + parameters.map((param,index) => param + "=" + param_vals[index])
         //map gives an array of &param=param_val looking things. The reducer is needed to take out the commas, essentially
-            .reduce((accumulator, this_arg) => accumulator + this_arg)
+            .join("&")
         : "")
 }
 function processResponse(response) {

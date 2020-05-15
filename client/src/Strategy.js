@@ -18,7 +18,7 @@ import Help from './HelpInfo.js';
 
 // The base URL for the server.
 const refreshTime = 10;
-const DataGetter = new DG;
+const DataGetter = new DG();
 
 
 class Strategy extends React.Component {
